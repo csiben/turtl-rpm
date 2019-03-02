@@ -17,6 +17,8 @@ sudo dnf install turtl-desktop
 sudo dnf upgrade turtl-desktop
 ```
 
+Desktop data for an individual user is, by default, located here: `~/.config/Turtl/core`
+
 ## Turtl? What the heck is Turtl?
 
 Visit the developers's github -- https://github.com/turtl/ -- or his working
