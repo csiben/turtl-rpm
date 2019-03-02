@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This metadata copyright 2018 Todd Warner <t0dd_at_protonmail.com> -->
+<!-- https://fedoraproject.org/wiki/Packaging:AppData -->
+<!-- https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html -->
+<!-- https://spdx.org/licenses/ -->
+<component type="desktop-application">
+  <id>turtl-desktop.desktop</id>
+  <metadata_license>GPL-3.0-only</metadata_license>
+  <project_license>GPL-3.0-only</project_license>
+  <name>Turtl</name>
+  <summary>The secure collaborative notebook.</summary>
+
+  <description>
+    <p>Organize your life: Whether it's bookmarks or passwords, files or shopping lists...Turtl organizes it all and makes it easy to find later. Sync across your devices. Leave nothing behind.</p>
+
+    <p>Protect your data: Turtl uses high-end cryptography to protect your data. Whether you're worried about information leaks, competitive advantage, or blanket government surveillance, Turtl works hard to make sure only you, and those you choose, can see your data.</p>
+
+    <p>Collaborate and share: Just because Turtl is secure and private doesn't mean you can't share with your teammates or family. Choose who you want to have access to your data without compromising your security.</p>
+  </description>
+
+  <screenshots>
+    <screenshot type="default">
+      <caption>Search</caption>
+      <image>https://turtlapp.com/images/home/screen/search.jpg</image>
+    </screenshot>
+    <screenshot>
+      <caption>Collaborate</caption>
+      <image>https://turtlapp.com/images/home/screen/invite.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Write in markdown</caption>
+      <image>https://turtlapp.com/images/home/screen/markdown.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Beautiful math representation is possible</caption>
+      <image>https://turtlapp.com/images/home/screen/math.png</image>
+    </screenshot>
+  </screenshots>
+
+  <url type="homepage">https://turtlapp.com/</url>
+  <url type="homepage">https://turtlapp.com/</url>
+  <url type="bugtracker">https://github.com/turtl/desktop/issues</url>
+  <url type="bugtracker">https://github.com/taw00/turtl-rpm/issues</url>
+  <url type="help">https://community.turtlapp.com/</url>
+
+  <update_contact>t0dd_at_protonmail.com</update_contact>
+
+  <developer_name>Andrew Lyon</developer_name>
+  <developer_name>@orthecreedence</developer_name>
+
+  <provides>
+    <binary>turtl-desktop</binary>
+  </provides>
+
+  <releases>
+    <release version="0.7.2.5" date="2018-12-07">
+      <description>
+        <p>0.7.2.5 milestone release</p>
+      </description>
+    </release>
+  </releases>
+</component>
+
