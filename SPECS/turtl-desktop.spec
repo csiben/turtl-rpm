@@ -153,7 +153,12 @@ BuildRequires: tree vim-enhanced less findutils dnf
 
 
 %description
-Turtl is a free and secure collaborative notebook. Markdown-formated text entry.
+Turtl is a free and secure collaborative markdown-enabled notebook web
+application. turtl-desktop serves as a desktop frontend to a turtl-webapp.
+
+By default, notes are syncronized with turtlapp.com. Users or organizations may
+also host their own turtlapp servers to use as secure targets for user and team
+notes.
 
 %prep
 # Prep section starts us in directory {_builddir}
