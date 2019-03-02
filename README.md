@@ -1,7 +1,13 @@
 # turtl-rpm
 Source RPMs for Fedora Linux builds of... Turtl: The Secure Collaboritive Notebook
 
-Note: At the moment, only the desktop version of Turtl is provided. The webapp may come at a later date.
+At the moment, only the desktop version is included. `turtl-desktop`, by
+default, plugs into <https://turtlapp.com/> and synchronizes with that server
+and allows you to collaborate with others who also use that server as a central
+synchronization point.
+
+You can also run your own server, but at the moment that is not enabled by the
+software included in this repository.
 
 ## TL;DR
 
@@ -26,9 +32,7 @@ webapp version of the application -- https://turtlapp.com/
 
 Turtl is a nifty application for writing
 [markdown](https://en.wikipedia.org/wiki/Markdown)-formated documents and
-storing them encrypted on the file system. You can run the application locally
-as a single user, or collaboratively from a webapp that you set up, or using
-the developers example webapp (see above).
+storing them encrypted on the file system but synced to a central server.
 
 ## What is this github repo for?
 
