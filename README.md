@@ -12,7 +12,7 @@ software included in this repository.
 ## Turtl? What the heck is Turtl?
 
 Visit the developers's github -- https://github.com/turtl/ -- or his working
-webapp version of the application -- https://turtlapp.com/
+project homepage -- https://turtlapp.com/
 
 Turtl is a nifty application for writing
 [markdown](https://en.wikipedia.org/wiki/Markdown)-formated documents and
