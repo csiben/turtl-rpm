@@ -1,5 +1,5 @@
 # turtl-rpm
-Source RPMs for Fedora Linux builds of... Turtl: The Secure Collaboritive Notebook
+Source RPMs for Fedora Linux builds of... Turtl: The Secure Collaborative Notebook
 
 At the moment, only the desktop version is included. `turtl-desktop`, by
 default, plugs into <https://turtlapp.com/> and synchronizes with that server
