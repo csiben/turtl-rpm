@@ -1,4 +1,4 @@
-# turtl.spec
+# turtl-desktop.spec
 # vim:tw=0:ts=2:sw=2:et:
 #
 # Turl - The Secure Collaborative Notebook
@@ -19,7 +19,6 @@ Name: turtl-desktop
 Summary: The Secure Collaborative Notebook
 
 %define targetIsProduction 0
-%define includeMinorbump 1
 
 # ie. if the dev team (or I in this case) includes things like rc3 or the
 # date in the source filename
@@ -39,7 +38,7 @@ Version: %{vermajor}.%{verminor}
 %endif
 
 # MINORBUMP - can edit this
-%define minorbump taw
+%define minorbump taw1
 
 #
 # Build the release string - don't edit this
@@ -55,9 +54,6 @@ Version: %{vermajor}.%{verminor}
 
 # pkgrel will also be defined, snapinfo and minorbump may not be
 %define _release %{_pkgrel}
-%if ! %{includeMinorbump}
-  %undefine minorbump
-%endif
 %if 0%{?snapinfo:1}
   %if 0%{?minorbump:1}
     %define _release %{_pkgrel}.%{snapinfo}%{?dist}.%{minorbump}
@@ -95,7 +91,7 @@ ExclusiveArch: x86_64 i686 i586 i386
 %define _hardened_build 1
 
 # https://fedoraproject.org/wiki/Packaging:SourceURL
-# * Sources as part of source RPM can be found at
+# Sources as part of source RPM can be found at
 #   https://github.com/taw00/turtl-rpm
 %define _repo_archive %{name}-%{version}-%{buildQualifier}
 %define _source0_name desktop
@@ -103,17 +99,13 @@ ExclusiveArch: x86_64 i686 i586 i386
 %define _source1_name core
 %define _source1 %{_source1_name}-rs
 %define _source2 js
-%define _source3 %{name}-%{vermajor}-contrib
+%define _source4 %{name}-%{vermajor}-contrib
 
-#Source0: https://github.com/turtl/desktop/archive/v%%{version}/%%{_source0}.tar.gz
 Source0: https://github.com/taw00/turtl-rpm/blob/master/SOURCES/%{_repo_archive}/%{_source0}.tar.gz
 Source1: https://github.com/taw00/turtl-rpm/blob/master/SOURCES/%{_repo_archive}/%{_source1}.tar.gz
 Source2: https://github.com/taw00/turtl-rpm/blob/master/SOURCES/%{_repo_archive}/%{_source2}.tar.gz
 Source3: https://github.com/taw00/turtl-rpm/blob/master/SOURCES/%{name}.appdata.xml
 #Source4: https://github.com/taw00/turtl-rpm/blob/master/SOURCES/%%{_repo_archive}/%%{name}-%%{vermajor}-contrib.tar.gz
-
-
-# https://en.opensuse.org/openSUSE:Build_Service_cross_distribution_howto
 
 BuildRequires: nodejs npm git
 BuildRequires: openssl-libs openssl-devel
@@ -154,11 +146,11 @@ BuildRequires: tree vim-enhanced less findutils dnf
 
 %description
 Turtl is a free and secure collaborative markdown-enabled notebook web
-application. turtl-desktop serves as a desktop frontend to a turtl-webapp.
+application. turtl-desktop serves as a desktop frontend to a turtl-server.
 
 By default, notes are syncronized with turtlapp.com. Users or organizations may
-also host their own turtlapp servers to use as secure targets for user and team
-notes.
+also host their own turtlapp servers to use as secure and privately managed
+targets for user and team notes (see also the turtl-server RPM).
 
 %prep
 # Prep section starts us in directory {_builddir}
@@ -192,7 +184,8 @@ cd %{sourceroot}
   %define _nwjs_dir nwjs-v%{nwjs_version}-linux-ia32
 %endif
 #/usr/bin/curl -LO# https://dl.nwjs.io/v%{nwjs_version}/%{_nwjs_dir}.tar.gz
-/usr/bin/curl -LO# https://toddwarner.keybase.pub/pub/srpms/build_support/%{_nwjs_dir}.tar.gz
+#/usr/bin/curl -LO# https://toddwarner.keybase.pub/pub/srpms/build_support/%{_nwjs_dir}.tar.gz
+/usr/bin/curl -LOs https://toddwarner.keybase.pub/pub/srpms/build_support/%{_nwjs_dir}.tar.gz
 tar xvzf %{_nwjs_dir}.tar.gz
 %define _nwjs_path $(readlink -e %{_nwjs_dir})
 echo "\
@@ -230,7 +223,8 @@ rm -rf ${HOME}/.npm/_cacache
   /usr/bin/npm config list
 %endif
 
-/usr/bin/npm install 
+/usr/bin/npm install
+/usr/bin/npm audit fix
 %if 0%{?suse_version:1}
   /usr/bin/sleep 15
 %endif
@@ -242,7 +236,8 @@ cd ..
 
 # js
 cd js
-/usr/bin/npm install 
+/usr/bin/npm install
+/usr/bin/npm audit fix
 cp config/config.js.default config/config.js
 cd ..
 
@@ -256,9 +251,11 @@ cd desktop
 PYTHON=/usr/bin/python2 /usr/bin/npm install ffi
 /usr/bin/npm install --save-dev electron-rebuild
 /usr/bin/npm install --save-dev electron-packager
-/usr/bin/npm install 
+/usr/bin/npm install
+/usr/bin/npm audit fix
 make electron-rebuild
 make
+/usr/bin/npm audit fix
 make release-linux
 
 
@@ -327,7 +324,7 @@ ln -s %{installtree}/turtl %{buildroot}%{_bindir}/%{name}
 %{_datadir}/icons/*
 %{_datadir}/applications/%{name}.desktop
 %{_metainfodir}/%{name}.appdata.xml
-# We own /usr/share/turtl and everything under it...
+# We own /usr/share/turtl-desktop and everything under it...
 %{installtree}
 
 
@@ -344,9 +341,11 @@ umask 007
 
 
 %changelog
+* Mon Mar 04 2019 Todd Warner <t0dd_at_protonmail.com> 0.7.2.5-20190226.testing.taw2
+  - minor tweaks to descriptions and such.
+
+* Sun Mar 03 2019 Todd Warner <t0dd_at_protonmail.com> 0.7.2.5-20190226.testing.taw1
+  - npm audit fix added as suggested by the build
+
 * Sat Mar 02 2019 Todd Warner <t0dd_at_protonmail.com> 0.7.2.5-20190226.testing.taw
   - v0.7.2.5 as of 20190226
-
-* Sat Dec 01 2018 Todd Warner <t0dd_at_protonmail.com> 0.7.2.4-20181201.testing.taw
-  - v0.7.2.4 as of 20181201 -- FAILED BUILDS
-
