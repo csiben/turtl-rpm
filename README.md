@@ -9,22 +9,6 @@ synchronization point.
 You can also run your own server, but at the moment that is not enabled by the
 software included in this repository.
 
-## TL;DR
-
-### I want to install the desktop version of Turtl!
-```
-# Initial install instructions...
-sudo dnf copr enable taw/turtl
-sudo dnf install turtl-desktop
-```
-
-```
-# Update/upgrade instructions...
-sudo dnf upgrade turtl-desktop
-```
-
-Desktop data for an individual user is, by default, located here: `~/.config/Turtl/core`
-
 ## Turtl? What the heck is Turtl?
 
 Visit the developers's github -- https://github.com/turtl/ -- or his working
@@ -39,15 +23,41 @@ storing them encrypted on the file system but synced to a central server.
 I build RPMs here and there. I construct and maintain source RPMs and all that
 data is stored in github repositories like this one. Building the binaries
 (useable applications) is either up to the user, or you can use mine that I
-build using [Fedora's COPR build cloud](https://copr.fedorainfracloud.org).
-Follow the "TL;DR" instructions above to install Turtl.
+build using [Fedora's COPR build cloud](https://copr.fedorainfracloud.org) and those packages are built and located [here](https://copr.fedorainfracloud.org/coprs/taw/turtl/).
+Follow the "TL;DR" instructions below to install Turtl.
 
 Source RPMs found here should be signed with my general GPG key found here:
 <https://keybase.io/toddwarner/key.asc>
 
 Binary RPMs delivered via COPR are signed with a GPG specific to that
-repository. COPR enablement as shown above will install this key appropriately
-when ncessary.
+repository. COPR enablement as shown below (TL;DR) will install this key
+appropriately when ncessary.
+
+## TL;DR - I want to install the desktop version of Turtl!
+
+```
+# Initial install instructions...
+sudo dnf copr enable taw/turtl
+sudo dnf install turtl-desktop
+```
+
+```
+# Update/upgrade instructions...
+sudo dnf upgrade turtl-desktop
+```
+
+Now find Turtl in your menus or normal GUI application search and run it.
+
+* Note1: Desktop data for an individual user is, by default, located here: `~/.config/Turtl/core`
+* Note2: By default, the desktop application will synchronize with your account on turtlapp.com
+
+## TL;DR - I want to install and host a Turtl Server!
+
+Installation and configuration of a Turtl Server is longer than "TL;DR", but
+dive in and set up your own Turtl Server in support of your desktop and mobile
+Turtl clients using the RPMs provided here.
+
+<https://github.com/taw00/turtl-rpm/README-turtl-server.md>
 
 ## Comments? Suggestions?
 Open an issue here, or send me a note via Keybase -- https://keybase.io/toddwarner

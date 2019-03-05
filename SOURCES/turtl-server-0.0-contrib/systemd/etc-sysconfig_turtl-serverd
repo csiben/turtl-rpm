@@ -1,0 +1,34 @@
+# Configuration settings leveraged by the systemd-managed turtl-serverd.service
+
+# EMAIL_FROM, EMAIL_TO, TURTLNODE_ALIAS
+# Send email upon start, stop, and restart of the turtl-serverd.service
+#
+# If these values are set, emails will be sent "from" EMAIL_FROM, "to" EMAIL_TO,
+# and with TURTLNODE_ALIAS as a subject line differentiator.
+# Therefore, edit these settings as appropriate for your circumstance.
+#
+# NOTE:
+# To function without error, your system MUST be configured to be able to send
+# email successfully using these settings. Configuring your system to be able
+# to email is left as an exercise to the reader of this comment. You can test
+# if your system is appropriately configured with a simple...
+#
+# echo "body" | mail -s "test subject" -r your_from@example.com your_to@example.com
+#
+# You may have to issue an systemctl daemon-reload for these changes to take
+# effect.
+
+EMAIL_FROM=""
+EMAIL_TO=""
+TURTLNODE_ALIAS="TURTLSERVER"
+
+
+# ---- settings below this line are rarely manually edited ----------
+
+APPPATH="/usr/share/turtl-server"
+LOGPATH="/var/log/turtl-server/turtl-server.log"
+
+# How long to sleep in seconds after a start / stop, regardless of pid status
+START_SLEEP_TIME=0
+STOP_SLEEP_TIME=2
+
