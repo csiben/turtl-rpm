@@ -1,4 +1,4 @@
-# Turtl: The Secure Collaborative Notebook -- for Fedora Linux
+# Turtl: The Secure Collaborative Notebook, for Fedora Linux
 
 Turtl is a nifty desktop and mobile application for writing and organizing
 [markdown](https://en.wikipedia.org/wiki/Markdown)-formatted documents and
@@ -66,7 +66,7 @@ Installation and configuration of a Turtl Server is longer than "TL;DR", but
 dive in and set up your own Turtl Server in support of your desktop and mobile
 Turtl clients using the RPMs provided here.
 
-<https://github.com/taw00/turtl-rpm/README-turtl-server.md>
+<https://github.com/taw00/turtl-rpm/blob/master/README-turtl-server.md>
 
 ## Comments? Suggestions?
 Open an issue here, or send me a note via Keybase -- https://keybase.io/toddwarner
