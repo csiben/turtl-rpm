@@ -1,48 +1,55 @@
-# Install and host your very own Turtl Server!
+# Install and host a Turtl Server
 
 > Assumption: A modest competence at basic linux systems administration.
-> Dummy values used in this document: turtl.example.com and 198.51.100.35
-> used as example user configured hostname and IP address
+>
+> Dummy values used in this document: **turtl.example.com** and
+> **198.51.100.35**, examples representing user configured hostname and IP
+> address
 
-A Turtl Server most powerfully sits on a hosted platform  and serves as your personal private repository of notes, thoughts, grand ideas, and missives... all synchronized between your devices. And if you like, the devices of your friends, family, and team-members. Encrypted and formatted in industry standard [markdown](https://commonmark.org/).
+A Turtl Server most powerfully sits on a hosted platform and serves as your
+personal, private, end-to-end encrypted repository of
+[markdown](https://commonmark.org/)-formatted notes, thoughts, grand ideas, and
+missives... all synchronized between your devices. And if you like, the devices
+of your friends, family, and team-members.
 
-This is a bit more complicated than "TL;DR", but I will do my best to summarize.
+Installation and configuration is a bit more complicated than "TL;DR", but I
+will do my best to summarize.
 
 Note: Special thanks have to go out to Jeremy Schroeder for the general
 structure of these instructions.
 [Here's](https://spudz.org/2019/02/24/how-to-setup-a-private-turtl-server/) his
 howto. I took what he wrote, expanded upon it, and adjusted the configuration to
-accomodate managing everything with natively constructed RPM packages. It would
-have taken me forever to figure out how to implement this without his find
+accommodate managing everything with natively constructed RPM packages. It would
+have taken me forever to figure out how to implement this without his fine
 document.
 
 **Table of Contents**
 <!-- TOC -->
 
-- [Install and host your very own Turtl Server!](#install-and-host-your-very-own-turtl-server)
+- [Install and host a Turtl Server](#install-and-host-a-turtl-server)
   - [[1] Set up and configured a minimal headless VPS](#1-set-up-and-configured-a-minimal-headless-vps)
   - [[2] Install the software...](#2-install-the-software)
   - [[3] Enable and start the Postgresql DB](#3-enable-and-start-the-postgresql-db)
   - [[4] Configure a Postgresql user and database instance specifically for the Turtl Server application](#4-configure-a-postgresql-user-and-database-instance-specifically-for-the-turtl-server-application)
     - [Test that the PostgreSQL server is running in the general sense.](#test-that-the-postgresql-server-is-running-in-the-general-sense)
-    - [Create a PostgreSQL user and database (at the commandline, as system user](#create-a-postgresql-user-and-database-at-the-commandline-as-system-user)
+    - [Create a PostgreSQL user and database for Turtl](#create-a-postgresql-user-and-database-for-turtl)
     - [Update the database password for the turtl user](#update-the-database-password-for-the-turtl-user)
     - [Edit PostgreSQL's connection permission configuration file](#edit-postgresqls-connection-permission-configuration-file)
     - [Restart the PostgreSQL systemd service and test the connection...](#restart-the-postgresql-systemd-service-and-test-the-connection)
   - [[5] Configure your Turtl Server](#5-configure-your-turtl-server)
     - [Edit the Turtl configuration file](#edit-the-turtl-configuration-file)
     - [Initialize the database structure](#initialize-the-database-structure)
-  - [[6] Setup, configure, to include enhanced security (TLS/SSL), the Nginx webserver](#6-setup-configure-to-include-enhanced-security-tlsssl-the-nginx-webserver)
+  - [[6] Setup and configure the Nginx webserver](#6-setup-and-configure-the-nginx-webserver)
+    - [Boost Nginx's `types_hash_max_size` from `2048` to `4096`](#boost-nginxs-types_hash_max_size-from-2048-to-4096)
     - [Firewall: Poke a hole to the outside world for ports 80 (http) and 443 (https)](#firewall-poke-a-hole-to-the-outside-world-for-ports-80-http-and-443-https)
     - [Start nginx.service](#start-nginxservice)
     - [Setup your domain and point DNS to your VPS](#setup-your-domain-and-point-dns-to-your-vps)
     - [Generate (issue) a TLS certicate from Let's Encrypt for this service](#generate-issue-a-tls-certicate-from-lets-encrypt-for-this-service)
-    - [Configure Nginx to service Turtl Server](#configure-nginx-to-service-turtl-server)
-  - [[7] Start the Turtl server once again and browse to your domain](#7-start-the-turtl-server-once-again-and-browse-to-your-domain)
-    - [[8] Configure a client to use your server](#8-configure-a-client-to-use-your-server)
-  - [Comments? Suggestions?](#comments-suggestions)
+  - [[7] Configure Nginx to service Turtl Server](#7-configure-nginx-to-service-turtl-server)
+- [Doing this as root](#doing-this-as-root)
 
 <!-- /TOC -->
+
 
 There are four components to a Turtl Server.
 1. A VPS or physical Fedora Linux server.
@@ -100,24 +107,15 @@ as well.
 sudo -i -u postgres psql
 ```
 ```
-# Runs okay? Good. CTRL-D and get back to the commandline.
+# Did that run okay? Good. CTRL-D and get back to the commandline.
 ```
-<!--
-# Run through the createuser wizard [add 'turtl' as superuser for dev, limit to turtl db for prod]
-createuser --interactive
-createdb turtl
--->
 
-#### Create a PostgreSQL user and database (at the commandline, as system user
-postgres).
+#### Create a PostgreSQL user and database for Turtl
 
 ```
 # The database is named turtl and user is named turtl
 sudo -i -u postgres createuser turtl
 sudo -i -u postgres createdb --owner=turtl turtl
-```
-```
-# CTRL-D to log out of PostgreSQL terminal
 ```
 
 #### Update the database password for the turtl user  
@@ -149,13 +147,6 @@ Test the database direct login credentials...
 ```
 psql -d turtl -U turtl -W
 ```
-<!--
-```
-# Add a directory for uploads as the turtl system user
-# UPDATE: rpm install does this for you
-#sudo -u turtl mkdir -p /var/lib/turtl-server/public/uploads
-```
--->
 
 ## [5] Configure your Turtl Server
 
@@ -169,12 +160,6 @@ The database connection string:
 # This is the format: dbusername:dbpassword@127.0.0.1:5432/database_instance
 connstr: 'postgres://turtl:TURTL_DATABASE_PASSWORD@127.0.0.1:5432/turtl'
 ```
-
-<!--
-Some settings you need to verify (these defaults should suffice):  
-`plugin_location: '/usr/share/turtl-server/plugins'`  
-`  local: '/var/lib/turtl-server/public/uploads'`
--->
 
 #### Initialize the database structure
 
@@ -192,10 +177,10 @@ node server.js
 ```
 
 ```
-CTRL-C to exit.
+CTRL-C to shut down again
 ```
 
-## [6] Setup, configure, to include enhanced security (TLS/SSL), the Nginx webserver
+## [6] Setup and configure the Nginx webserver
 
 Helpful: <https://fedoraproject.org/wiki/Nginx>
 
@@ -229,12 +214,12 @@ log files: `sudo tail -f /var/log/nginx/*.log`
 
 #### Setup your domain and point DNS to your VPS
 
-Purchase domain name from someone like GoDaddy or Gandi. Let's say we were able
-to purchase `example.com`. Maybe `example.com` is my general website and directs
-to some other server. For my Turtl Server, I decided to create a sub-domain
-`turtl.example.com` and point that at this server. To do that all I need to do
-is add an "A" record in my domain provider's DNS Record configuration for the
-`example.com` domain. It would look something like this (IP address is
+Purchase a domain name from someone like GoDaddy or Gandi. Let's say we were
+able to purchase `example.com`. Maybe `example.com` is my general website and
+directs to some other server. For my Turtl Server, I decided to create a
+sub-domain `turtl.example.com` and point that at this server. To do that all I
+need to do is add an "A" record in my domain provider's DNS Record configuration
+for the `example.com` domain. It would look something like this (IP address is
 completely made up, of course)...
 
 ```
@@ -269,7 +254,7 @@ Install the `socat` RPM (mini-webserver)
 sudo dnf install socat -y
 ```
 
-Install acme.sh (recommended you do this as a fully logged in root)
+Install acme.sh (recommended you do this as root and a fully logged in)
 ```
 sudo su -
 # This will...
@@ -311,7 +296,9 @@ openssl dhparam -out /etc/ssl/dhparam.pem 4096
 
 ## [7] Configure Nginx to service Turtl Server
 
-All Nginx configuration reside in `/etc/nginx/nginx.conf` and `/etc/nginx/conf.d/`
+All Nginx configuration resides in `/etc/nginx/nginx.conf` and
+`/etc/nginx/conf.d/`. Other than the `types_hash_max_size` (see above), you will
+not be changing the configuration of ``/etc/nginx/nginx.conf`.
 
 #### Create a new file in the `nginx/conf.d` drop directory
 
