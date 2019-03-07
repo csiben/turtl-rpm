@@ -34,7 +34,7 @@ Version: %{vermajor}.%{verminor}
 # package release, and potentially extrarel
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.1
+  %define _pkgrel 0.2
 %endif
 
 # MINORBUMP
@@ -239,7 +239,7 @@ cp -a . %{buildroot}%{installtree}/
 %defattr(-,root,root,-)
 %license %{installtree}/LICENSE
 %defattr(-,root,turtl,-)
-%config(noreplace) %attr(640,root,turtl) %{installtree}/config/config.yaml
+%config(noreplace) %attr(660,root,turtl) %{installtree}/config/config.yaml
 # We own /usr/share/turtl-server and everything under it...
 # Going to throw warnings in the RPM build because we already pulled in LICENSE and config.yaml
 %{installtree}
@@ -301,6 +301,10 @@ umask 007
 
 
 %changelog
+* Thu Mar 07 2019 Todd Warner <t0dd_at_protonmail.com> 0.0.0-0.2.20190303.taw
+  - Updated config-file documentation. Some consistency fixes as well.
+  - config.yaml, which is permissioned to root:turtl changed from 0640 to 0660
+
 * Tue Mar 05 2019 Todd Warner <t0dd_at_protonmail.com> 0.0.0-0.1.20190303.taw
   - state of upstream repo as of 20190303
 

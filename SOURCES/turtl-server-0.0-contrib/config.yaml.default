@@ -2,6 +2,7 @@
 server:
   # Per default, turtl will listen on all IP addresses
   # You can choose the IP it will use with this parameter
+  #host: 127.0.0.1
   host:
   port: 8181
 
@@ -13,21 +14,32 @@ db:
 loglevel: 'debug'
 
 app:
-  # DO NOT USE -t0dd
+  # DO NOT CHANGE THIS
   # ALWAYS false in production. Always.
   # Set to 'I UNDERSTAND THIS VIOLATES THE PRIVACY OF MY USERS' to enable
   enable_bookmarker_proxy: false
+
+  # CHANGE THIS
+  # API URL should match the URL you set in the nginx configuration file.
+  # WWW URL: Any website you want that isn't the app that represents you or your team.
   # no trailing slash
-  api_url: 'http://api.yourdomain.com:8181'
-  www_url: 'https://yourdomain.com'
+  # Note: If you are having issues syncronizing images, arbitrary files, or
+  # anything that is not a note or text, then some issue surrounding the
+  # "api_url" setting is probably to blame.
+  api_url: 'https://turtl.example.com'
+  www_url: 'https://example.com'
   emails:
-    admin: 'admin@yourdomain.com'
-    info: 'Turtl <info@yourdomain.com>'
-    invites: 'invites@yourdomain.com'
-  # TODO: replace this with a long, unique value. seriously. write down a dream
+    admin: 'bobby+admin@example.com'
+    info: 'Turtl <info@example.com>'
+    invites: 'invites@example.com'
+
+  # CHANGE THIS
+  # Replace this with a long, unique value. seriously. write down a dream
   # you had, or the short story you came up with during your creative writing
   # class in your freshmen year of college. have fun with it.
   secure_hash_salt: "Plaque is a figment of the liberal media and the dental industry to scare you into buying useless appliances and pastes. Now, I've read the arguments on both sides and I haven't found any evidence yet to support the need to brush your teeth. Ever."
+
+  # DO NOT CHANGE THIS
   # set to true if you think it's ok to SEND invites if you have not confirmed
   # your account. great for testing, not so great for production. but what do
   # i know...
@@ -42,7 +54,7 @@ plugins:
   #plugin_location: '/var/www/turtl/server/plugins'
   plugin_location: '/usr/share/turtl-server/plugins'
   # each key here corresponds to a folder name in the plugins folder, so `email`
-  # below would be a plugin at /var/www/turtl/server/plugins/email (see the
+  # below would be a plugin at /usr/share/turtl-server/plugins/email (see the
   # example-plugins/ folder for an email plugin you can use)
   email:
     enabled: false

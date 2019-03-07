@@ -2,9 +2,12 @@
 
 > Assumption: A modest competence at basic linux systems administration.
 >
-> Dummy values used in this document: **turtl.example.com** and
-> **198.51.100.35**, examples representing user configured hostname and IP
-> address
+> Assumption: You have a dedicated domainname you are going to use for this
+> service. For this document, our example domain is example.com. If you owned
+> example.com, you would dedicate a subdomain to this service, our assumption
+> is that you chose a subdomain of **turtl**, and therefore the full domain
+> would be **turtl.example.com**. For documentation purposes, we are going to
+> use this dummy IP address **198.51.100.35**
 
 A Turtl Server most powerfully sits on a hosted platform and serves as your
 personal, private, end-to-end encrypted repository of
@@ -152,14 +155,31 @@ psql -d turtl -U turtl -W
 
 #### Edit the Turtl configuration file
 File `/usr/share/turtl-server/config/config.yaml`  
-Update the DB connection and other things local to you [emails, domain,
-upload directory, etc].
 
-The database connection string:
+The *crucial* configuration settings to enter correctly are the database
+connection string (connstr) and the API URL (api\_url).
+
+Other critical settings are "host", "port", and "local" (uploads directory).
+But these can remain the default.
+
+***Update the database connection string:***
+
 ```
 # This is the format: dbusername:dbpassword@127.0.0.1:5432/database_instance
 connstr: 'postgres://turtl:TURTL_DATABASE_PASSWORD@127.0.0.1:5432/turtl'
 ```
+
+***Update the `api_url` setting:***
+
+Since we are going to fetch and set an SSL certificate later, let's set this to
+"https://turtl.example.com". If you were not going to configure this Turtl
+Server to use SSL, then change that to http.
+
+***Change the `secure_hash_salt` setting:***
+Write out a long random diatribe. This is used to kickstart some of the
+cryptography that Turtl employs.
+
+Go ahead and set the www URL and emails addresses as you see fit.
 
 #### Initialize the database structure
 
