@@ -14,13 +14,14 @@ fi
 SSH_TARGET=$1
 DOMAIN=$2
 NGINX_ENABLED=$3
+HELPER_SCRIPT=_backup-turtl-server.remote-helper.sh
 
-rsync -az ./backup-turtl-server.remote-helper.sh $SSH_TARGET:
-ssh $SSH_TARGET "sudo ./backup-turtl-server.remote-helper.sh $DOMAIN $NGINX_ENABLED"
+rsync -az ./${HELPER_SCRIPT} $SSH_TARGET:
+ssh $SSH_TARGET "sudo ./${HELPER_SCRIPT} $DOMAIN $NGINX_ENABLED"
 echo "## Retrieving backup archive"
 rsync -az $SSH_TARGET:backup-$DOMAIN*.tar.gz ./
 echo "## Cleanup"
-ssh $SSH_TARGET 'rm ./backup-turtl-server.remote-helper.sh backup-$DOMAIN*.tar.gz'
+ssh $SSH_TARGET "rm ./${HELPER_SCRIPT} backup-$DOMAIN*.tar.gz"
 echo "## The archive(s)..."
 ls -lh ./backup-$DOMAIN*.tar.gz
 echo "## Backup of Turtl Server is complete"
