@@ -34,7 +34,7 @@ Version: %{vermajor}.%{verminor}
 # package release, and potentially extrarel
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.4
+  %define _pkgrel 0.5
 %endif
 
 # MINORBUMP
@@ -291,7 +291,8 @@ umask 007
 # refresh systemd context
 %systemd_post %{name}d.service
 # refresh firewalld context
-%firewalld_reload
+#%%firewalld_reload
+test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 
 %preun
@@ -302,7 +303,8 @@ umask 007
 %postun
 umask 007
 # refresh firewalld context
-%firewalld_reload
+#%%firewalld_reload
+test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 
 %posttrans
@@ -310,6 +312,7 @@ umask 007
 
 
 %changelog
+* Thu Mar 07 2019 Todd Warner <t0dd_at_protonmail.com> 0.0.0-0.5.20190303.taw
 * Thu Mar 07 2019 Todd Warner <t0dd_at_protonmail.com> 0.0.0-0.4.20190303.taw
 * Thu Mar 07 2019 Todd Warner <t0dd_at_protonmail.com> 0.0.0-0.3.20190303.taw
 * Thu Mar 07 2019 Todd Warner <t0dd_at_protonmail.com> 0.0.0-0.2.20190303.taw
@@ -319,6 +322,7 @@ umask 007
   - added README to the contribution tarball
   - added instruction for telling nginx to stream to turtl server, otherwise  
     nginx will suck down the entire blob and THEN send to turtl server. Ugly.
+  - firewalld_reload macro is non-functional for some reason
 
 * Tue Mar 05 2019 Todd Warner <t0dd_at_protonmail.com> 0.0.0-0.1.20190303.taw
   - state of upstream repo as of 20190303
