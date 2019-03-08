@@ -34,7 +34,7 @@ Version: %{vermajor}.%{verminor}
 # package release, and potentially extrarel
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.5
+  %define _pkgrel 0.6
 %endif
 
 # MINORBUMP
@@ -102,15 +102,18 @@ Source0: https://github.com/taw00/turtl-rpm/blob/master/SOURCES/%{name}-%{versio
 %endif
 Source1: https://github.com/taw00/turtl-rpm/blob/master/SOURCES/%{name}-%{vermajor}-contrib.tar.gz
 
-Requires: nodejs postgresql-server postgresql-contrib webserver
+Requires: nodejs postgresql-server postgresql-contrib
+# These are suggested, not required...
+#Requires: webserver openssl
 BuildRequires: nodejs npm git
 BuildRequires: systemd
 %{?systemd_requires}
 
-#t0dd: I will often add tree, vim-enhanced, and less for mock environment
-#      introspection
+#t0dd: Utilities made available for non-"production" builds in order to enable
+#      mock environment introspection
 %if ! %{targetIsProduction}
-BuildRequires: tree vim-enhanced less findutils dnf
+BuildRequires: tree vim-enhanced less findutils
+#BuildRequires: dnf
 %endif
 
 # Unarchived source tree structure (extracted in {_builddir})
@@ -236,6 +239,7 @@ install -D -m644 -p %{sourcecontribtree}/systemd/usr-lib-tmpfiles.d_%{name}d.con
 
 # other
 install -D -m644 -p %{sourcecontribtree}/README-turtl-server.md %{buildroot}%{installtree}/
+install -D -m770 -p %{sourcecontribtree}/backup-*.sh %{buildroot}%{installtree}/
 
 
 cd %{sourcetree}
@@ -312,6 +316,7 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 
 %changelog
+* Thu Mar 07 2019 Todd Warner <t0dd_at_protonmail.com> 0.0.0-0.6.20190303.taw
 * Thu Mar 07 2019 Todd Warner <t0dd_at_protonmail.com> 0.0.0-0.5.20190303.taw
 * Thu Mar 07 2019 Todd Warner <t0dd_at_protonmail.com> 0.0.0-0.4.20190303.taw
 * Thu Mar 07 2019 Todd Warner <t0dd_at_protonmail.com> 0.0.0-0.3.20190303.taw
@@ -323,6 +328,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
   - added instruction for telling nginx to stream to turtl server, otherwise  
     nginx will suck down the entire blob and THEN send to turtl server. Ugly.
   - firewalld_reload macro is non-functional for some reason
+  - you don't *need* a webserver to run a Turtl Server, therefore, I removed  
+    the requirement.
+  - added a backup script
 
 * Tue Mar 05 2019 Todd Warner <t0dd_at_protonmail.com> 0.0.0-0.1.20190303.taw
   - state of upstream repo as of 20190303

@@ -459,47 +459,9 @@ Open an issue here, or send me a note via Keybase -- https://keybase.io/toddwarn
 
 ## Addendum - Backing up your Turtl Server
 
-This could be, of course, automated.
+There is now a backup script in /usr/share/turtl-server/
 
-```
-# Doing this as root
-sudo su -
+Once your Turl Server is set up, just copy the backup script (and it's helper
+script) to your local desktop and run it (instructions in the comments of the
+script.
 
-DATE_F=$(date +%F)
-DOMAIN=turtl.example.com
-ARCHIVEBASENAME=backup-$DOMAIN-$DATE_F
-CHOWNTO=todd
-
-echo "## Backing up our Turtl Server!"
-echo "#### Shutting down services..."
-systemctl stop turtl-serverd.service
-systemctl stop nginx.service
-systemctl stop postgresql.service
-sleep 5
-
-echo "#### Copying files..."
-mkdir -p $ARCHIVEBASENAME
-cd $ARCHIVEBASENAME
-mkdir -p ./etc/ssl
-cp -a /etc/ssl/dhparam.pem ./etc/ssl/
-mkdir -p ./etc/nginx/conf.d
-cp -a /etc/nginx/conf.d/* ./etc/nginx/conf.d/$DOMAIN
-mkdir -p ./etc/sysconfig
-cp -a /etc/sysconfig/turtl-serverd ./etc/sysconfig/
-mkdir ./root
-cp -a /root/.acme.sh ./root/DOTacme.sh
-mkdir -p ./var/lib
-cp -a /var/lib/pgsql ./var/lib/
-cp -a /var/lib/turtl-server ./var/lib/
-cd ..
-systemctl start turtl-serverd.service
-systemctl start nginx.service
-systemctl start postgresql.service
-
-echo "#### Creating archive (tarball)..."
-tar -czf $ARCHIVEBASENAME.tar.gz $ARCHIVEBASENAME
-chown $CHOWNTO:$CHOWNTO $ARCHIVEBASENAME.tar.gz
-mv -v $ARCHIVEBASENAME.tar.gz /home/$CHOWNTO/
-ls -lh /home/$CHOWNTO/$ARCHIVEBASENAME.tar.gz
-echo ## DONE!
-```
