@@ -15,18 +15,33 @@ loglevel: 'debug'
 
 app:
   # DO NOT CHANGE THIS
-  # ALWAYS false in production. Always.
+  # enable_bookmarker_proxys is ALWAYS false in production. Always.
   # Set to 'I UNDERSTAND THIS VIOLATES THE PRIVACY OF MY USERS' to enable
   enable_bookmarker_proxy: false
 
   # CHANGE THIS
-  # API URL should match the URL you set in the nginx configuration file.
-  # WWW URL: Any website you want that isn't the app that represents you or your team.
-  # no trailing slash
-  # Note: If you are having issues syncronizing images, arbitrary files, or
-  # anything that is not a note or text, then some issue surrounding the
-  # "api_url" setting is probably to blame.
+  # Note: turtl.example.com and 198.51.100.35 are *example* domains for your
+  #       Turtl Server.
+  # Note: If you are having issues syncronizing arbitrary files or images
+  #       (attachments) then some issue surrounding the "api_url" setting is
+  #       probably to blame.
+  #
+  # If you are directly connecting to the Turtl Server
+  # (i.e., not through Nginx)...
+  #api_url: 'http://198.51.100.35:8181'
+  #...or...
+  #api_url: 'http://turtl.example.com:8181'
+  #
+  # If you using Nginx as your webserver and using a domainname,
+  # but not using SSL...
+  # Note that the api_url matches URL configured in the nginx config file.
+  #api_url: 'http://turtl.example.com'
+  #
+  # If you using Nginx as your webserver and using a domainname,
+  # but you *are* using SSL...
+  # Note that the api_url matches URL configured in the nginx config file.
   api_url: 'https://turtl.example.com'
+
   www_url: 'https://example.com'
   emails:
     admin: 'bobby+admin@example.com'
@@ -34,9 +49,9 @@ app:
     invites: 'invites@example.com'
 
   # CHANGE THIS
-  # Replace this with a long, unique value. seriously. write down a dream
+  # Replace this with a long, unique value. Seriously. Write down a dream
   # you had, or the short story you came up with during your creative writing
-  # class in your freshmen year of college. have fun with it.
+  # class in your freshmen year of college. Have fun with it.
   secure_hash_salt: "Plaque is a figment of the liberal media and the dental industry to scare you into buying useless appliances and pastes. Now, I've read the arguments on both sides and I haven't found any evidence yet to support the need to brush your teeth. Ever."
 
   # DO NOT CHANGE THIS
@@ -51,6 +66,7 @@ sync:
   max_bulk_sync_records: 32
 
 plugins:
+  # plugin_location, DO NOT CHANGE THIS (probably)
   #plugin_location: '/var/www/turtl/server/plugins'
   plugin_location: '/usr/share/turtl-server/plugins'
   # each key here corresponds to a folder name in the plugins folder, so `email`

@@ -34,7 +34,7 @@ Version: %{vermajor}.%{verminor}
 # package release, and potentially extrarel
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.2
+  %define _pkgrel 0.4
 %endif
 
 # MINORBUMP
@@ -223,21 +223,26 @@ install -d %{buildroot}%{_unitdir}
 install -d %{buildroot}%{_sysconfdir}/sysconfig/%{name}d-scripts
 # /usr/lib/tmpfiles.d/
 install -d %{buildroot}%{_tmpfilesdir}
-install -D -m750 -p %{sourcecontribtree}/systemd/usr-share-turtl-server_turtl-serverd-start.sh %{buildroot}%{installtree}/turtl-serverd-start.sh
 
-# System services
+# firewalld services
+install -D -m644 -p %{sourcecontribtree}/usr-lib-firewalld-services_turtl-server.xml %{buildroot}%{_usr_lib}/firewalld/services/turtl-server.xml
+
+# systemd services
+install -D -m750 -p %{sourcecontribtree}/systemd/usr-share-turtl-server_turtl-serverd-start.sh %{buildroot}%{installtree}/turtl-serverd-start.sh
 install -D -m600 -p %{sourcecontribtree}/systemd/etc-sysconfig_%{name}d %{buildroot}%{_sysconfdir}/sysconfig/%{name}d
 install -D -m755 -p %{sourcecontribtree}/systemd/etc-sysconfig-%{name}d-scripts_send-email.sh %{buildroot}%{_sysconfdir}/sysconfig/%{name}d-scripts/send-email.sh
 install -D -m644 -p %{sourcecontribtree}/systemd/usr-lib-systemd-system_%{name}d.service %{buildroot}%{_unitdir}/%{name}d.service
 install -D -m644 -p %{sourcecontribtree}/systemd/usr-lib-tmpfiles.d_%{name}d.conf %{buildroot}%{_tmpfilesdir}/%{name}d.conf
+
+# other
+install -D -m644 -p %{sourcecontribtree}/README-turtl-server.md %{buildroot}%{installtree}/
+
 
 cd %{sourcetree}
 cp -a . %{buildroot}%{installtree}/
 
 
 %files
-%defattr(-,root,root,-)
-%license %{installtree}/LICENSE
 %defattr(-,root,turtl,-)
 %config(noreplace) %attr(660,root,turtl) %{installtree}/config/config.yaml
 # We own /usr/share/turtl-server and everything under it...
@@ -252,6 +257,10 @@ cp -a . %{buildroot}%{installtree}/
 %dir %attr(755,turtl,turtl) %{_sysconfdir}/sysconfig/%{name}d-scripts
 
 %defattr(-,root,root,-)
+%license %{installtree}/LICENSE
+%doc %{sourcecontribtree}/README-turtl-server.md
+# firewalld service definition
+%{_usr_lib}/firewalld/services/turtl-server.xml
 # systemd service definition
 %{_unitdir}/%{name}d.service
 # systemd service tmp file
@@ -282,7 +291,7 @@ umask 007
 # refresh systemd context
 %systemd_post %{name}d.service
 # refresh firewalld context
-#%%firewalld_reload
+%firewalld_reload
 
 
 %preun
@@ -293,7 +302,7 @@ umask 007
 %postun
 umask 007
 # refresh firewalld context
-#%%firewalld_reload
+%firewalld_reload
 
 
 %posttrans
@@ -301,9 +310,15 @@ umask 007
 
 
 %changelog
+* Thu Mar 07 2019 Todd Warner <t0dd_at_protonmail.com> 0.0.0-0.4.20190303.taw
+* Thu Mar 07 2019 Todd Warner <t0dd_at_protonmail.com> 0.0.0-0.3.20190303.taw
 * Thu Mar 07 2019 Todd Warner <t0dd_at_protonmail.com> 0.0.0-0.2.20190303.taw
   - Updated config-file documentation. Some consistency fixes as well.
   - config.yaml, which is permissioned to root:turtl changed from 0640 to 0660
+  - added firewalld service definition in case you want to export 8181 directly
+  - added README to the contribution tarball
+  - added instruction for telling nginx to stream to turtl server, otherwise  
+    nginx will suck down the entire blob and THEN send to turtl server. Ugly.
 
 * Tue Mar 05 2019 Todd Warner <t0dd_at_protonmail.com> 0.0.0-0.1.20190303.taw
   - state of upstream repo as of 20190303

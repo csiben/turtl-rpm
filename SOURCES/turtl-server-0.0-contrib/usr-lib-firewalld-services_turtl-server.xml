@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- turtl-server.xml
+     Location if installed by an rpm: /usr/lib/firewalld/
+     Location if installed by a human: /etc/firewalld/services/ -->
+<service>
+  <short>Turtl Server port</short>
+  <description>Turtl is a secure notebook management application. Turtle Server
+      is a back-office service enabling devices using the desktop or mobile
+      Turtl application to synchronize between them. End-to-end encryption
+      enabled.</description>
+  <port protocol="tcp" port="8181"/>
+</service>
