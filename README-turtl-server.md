@@ -1,30 +1,31 @@
 # Install and host a Turtl Server
 
-> Assumption: A modest competence at basic linux systems administration.
->
-> Assumption: You have a dedicated domainname you are going to use for this
-> service. For this document, our example domain is example.com. If you owned
-> example.com, you would dedicate a subdomain to this service, our assumption
-> is that you chose a subdomain of **turtl**, and therefore the full domain
-> would be **turtl.example.com**. For documentation purposes, we are going to
-> use this dummy IP address **198.51.100.35**
+Turtl Server is a self-hostable communication and sychronization hub enabling
+users to synchronize their Turtl client data across all of their devices and
+collaborate with other users on the network. As part of the sychronization
+process, a Turtl Server also serves as a secure backup of user content. All
+data is secured with end-to-end encryption.
 
-A Turtl Server most powerfully sits on a hosted platform and serves as your
-personal, private, end-to-end encrypted repository of
-[markdown](https://commonmark.org/)-formatted notes, thoughts, grand ideas, and
-missives... all synchronized between your devices. And if you like, the devices
-of your friends, family, and team-members.
+By default, the Turtl Server that your clients are configured to leverage is
+the Turtl Server provided by the Turtl development team. The Turtl Server
+application provided here enables an admin to bring the secure Turtl ecosystem
+inhouse and in their full control.
 
-Installation and configuration is a bit more complicated than "TL;DR", but I
-will do my best to summarize.
+> Assumptions:
+> * A modest degree of competence at basic linux systems administration.
+> * A dedicated domainname to use for this service. For the purposes of this
+>   document, our example top-level domain is `example.com` and our dedicated
+>   subdomain for this service is `turtl`, and therefore the full domain is
+>   `turtl.example.com`. Also, for documentation purposes, we are using this
+>   dummy IP address `198.51.100.35`.
 
-Note: Special thanks have to go out to Jeremy Schroeder for the general
+_Note: Special thanks have to go out to Jeremy Schroeder for the general
 structure of these instructions.
 [Here's](https://spudz.org/2019/02/24/how-to-setup-a-private-turtl-server/) his
-howto. I took what he wrote, expanded upon it, and adjusted the configuration to
-accommodate managing everything with natively constructed RPM packages. It would
-have taken me forever to figure out how to implement this without his fine
-document.
+howto. I took what he wrote, expanded upon it, and adjusted the configuration
+to accommodate managing everything with natively constructed RPM packages. It
+would have taken me forever to figure out how to implement this without his
+fine document._
 
 **Table of Contents**
 <!-- TOC -->
