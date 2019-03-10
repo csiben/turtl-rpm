@@ -25,20 +25,19 @@ Summary: The Secure Collaborative Notebook
 %define buildQualifier 20190226
 %define nwjs_version 0.36.2
 
-# VERSION - can edit this
-# eg. 0.17.0
+# VERSION
 %define vermajor 0.7
 %define verminor 2.5
 Version: %{vermajor}.%{verminor}
 
-# RELEASE - can edit this
+# RELEASE
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.1
+  %define _pkgrel 0.2
 %endif
 
-# MINORBUMP - can edit this
-%define minorbump taw1
+# MINORBUMP
+%define minorbump taw
 
 #
 # Build the release string - don't edit this
@@ -171,9 +170,6 @@ cd .. ; cp ../SOURCES/%{name}.appdata.xml %{sourceroot}/ ; cd %{sourceroot}
 #%%setup -q -T -D -a 4 -n %%{sourceroot}
 cd ..
 
-# Make sure the right library path is used...
-#echo "%%{_libdir}/%%{name}" > %%{sourcecontribtree}/etc-ld.so.conf.d_%%{name}.conf
-
 # extract the rest of the tree
 cd %{sourceroot}
 # nwjs
@@ -186,17 +182,16 @@ cd %{sourceroot}
 #/usr/bin/curl -LO# https://dl.nwjs.io/v%{nwjs_version}/%{_nwjs_dir}.tar.gz
 #/usr/bin/curl -LO# https://toddwarner.keybase.pub/pub/srpms/build_support/%{_nwjs_dir}.tar.gz
 /usr/bin/curl -LOs https://toddwarner.keybase.pub/pub/srpms/build_support/%{_nwjs_dir}.tar.gz
-tar xvzf %{_nwjs_dir}.tar.gz
+tar xzf %{_nwjs_dir}.tar.gz
 %define _nwjs_path $(readlink -e %{_nwjs_dir})
 echo "\
-export PATH := $(PATH):%{_nwjs_path}:%{_builddir}/%{sourceroot}/core
+export PATH := ${PATH}:%{_nwjs_path}:%{_builddir}/%{sourceroot}/core
 export RUSTFLAGS := -L%{_libdir}
 export SODIUM_LIB_DIR := %{_libdir}
 export SODIUM_STATIC := static
 export OPENSSL_LIB_DIR=%{_libdir}
 export OPENSSL_INCLUDE_DIR=%{_includedir}/openssl
 " > core/var.mk
-cd ..
 
 # For debugging purposes...
 %if ! %{targetIsProduction}
@@ -221,12 +216,6 @@ rm -rf ${HOME}/.npm/_cacache
   /usr/bin/npm config set registry http://registry.npmjs.org/
   #/usr/bin/npm config set registry http://matrix.org/packages/npm/
   /usr/bin/npm config list
-%endif
-
-/usr/bin/npm install
-/usr/bin/npm audit fix
-%if 0%{?suse_version:1}
-  /usr/bin/sleep 15
 %endif
 
 # core
@@ -298,8 +287,10 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 install -D -m644 -p %{name}.appdata.xml %{buildroot}%{_metainfodir}/%{name}.appdata.xml
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.appdata.xml
 
+install -D -m644 -p desktop/CONTRIBUTING.md %{buildroot}%{installtree}
+
 cd desktop/target/Turtl*
-# Nuke a particlarly troublesome unneeded but included electron components...
+# Nuke a particlarly troublesome unneeded but included electron component...
 rm -rf resources/app/node_modules/performance-now
 # This is horrible brute-force logic...
 # ...Save only the components that matter (according to upstream builds)
@@ -316,10 +307,11 @@ cp -a . %{buildroot}%{installtree}/
 # a little ugly - symbolic link creation
 ln -s %{installtree}/turtl %{buildroot}%{_bindir}/%{name}
 
-
 %files
 %defattr(-,root,root,-)
 %license %{installtree}/LICENSE
+%doc %{installtree}/LICENSES.chromium.html
+%doc %{installtree}/CONTRIBUTING.md
 %{_bindir}/*
 %{_datadir}/icons/*
 %{_datadir}/applications/%{name}.desktop
@@ -341,11 +333,15 @@ umask 007
 
 
 %changelog
-* Mon Mar 04 2019 Todd Warner <t0dd_at_protonmail.com> 0.7.2.5-20190226.testing.taw2
+* Sat Mar 09 2019 Todd Warner <t0dd_at_protonmail.com> 0.7.2.5-0.2.20190226.taw3
+  - fixed specfile changelog inconsistencies
+  - fix PATH in var.mk during prep phase
   - minor tweaks to descriptions and such.
-
-* Sun Mar 03 2019 Todd Warner <t0dd_at_protonmail.com> 0.7.2.5-20190226.testing.taw1
   - npm audit fix added as suggested by the build
+  - quieted the tarball extraction of nwjs
+  - removed a small pile of commented out cruft
+  - shoved the chromium license file supplied in the source into docs
+  - added CONTRIBUTING.md to docs
 
-* Sat Mar 02 2019 Todd Warner <t0dd_at_protonmail.com> 0.7.2.5-20190226.testing.taw
+* Sat Mar 02 2019 Todd Warner <t0dd_at_protonmail.com> 0.7.2.5-0.1.20190226.taw
   - v0.7.2.5 as of 20190226
