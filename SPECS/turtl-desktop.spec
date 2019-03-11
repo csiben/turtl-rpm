@@ -315,6 +315,7 @@ cp -a . %{buildroot}%{installtree}/
 # a little ugly - symbolic link creation
 ln -s %{installtree}/turtl %{buildroot}%{_bindir}/%{name}
 
+
 %files
 %defattr(-,root,root,-)
 %license %{installtree}/LICENSE
@@ -331,11 +332,10 @@ ln -s %{installtree}/turtl %{buildroot}%{_bindir}/%{name}
 %pre
 # Retain soft line breaks setting if previously set as such
 # =1 is install, =2 is upgrade
-#  _sharedstatedir is /var/lib
-if [ $1 -gt 1 ] && [ -f %{installtree}/resources/app/build/app/main.js ] ; then
+if [ $1 -gt 1 ] && [ -e %{installtree}/resources/app/build/app/main.js ] ; then
   # if already configured to treat line breaks as "soft", touch a flag file
   grep -Fq "breaks: false" %{installtree}/resources/app/build/app/main.js && mkdir -p %{_sharedstatedir}/rpm-state/turtl-desktop ; touch %{_sharedstatedir}/rpm-state/turtl-desktop/soft-line-breaks
-  ls -l %{_sharedstatedir}/rpm-state/turtl-desktop
+  #ls -l %%{_sharedstatedir}/rpm-state/turtl-desktop
 fi
 exit 0
 
@@ -348,9 +348,10 @@ umask 007
 
 %posttrans
 # Retain soft line breaks setting if previously set as such
-# sharedstatedir is /var/lib
 # if flag file exists, enforce the soft line breaks setting and erase flag
-if [ -f %%{_sharedstatedir}/rpm-state/turtl-desktop/soft-line-breaks ] ; then
+#echo "posttrans: $1 and %%{_sharedstatedir}/rpm-state/turtl-desktop/soft-line-breaks"
+if [ -e %{_sharedstatedir}/rpm-state/turtl-desktop/soft-line-breaks ] ; then
+  #echo "turtl-desktop: Detected line breaks 'soft' setting. Retained."
   sed -i.previous '{s/'"breaks: true"'/'"breaks: false"'/}' %{installtree}/resources/app/build/app/main.js
 fi
 rm -rf %{_sharedstatedir}/rpm-state/turtl-desktop
