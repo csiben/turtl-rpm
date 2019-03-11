@@ -1,12 +1,16 @@
 # turtl-server.spec
 # vim:tw=0:ts=2:sw=2:et:
 #
-# Turl - The Secure Collaborative Notebook
-#        Encrypted notes. Includes markdown support.
+# Turtl - The Secure Collaborative Notebook
+#         End-to-end encrypted markdown. Syncable. Shareable.
 #
+# Turtl Server -- A backend self-hostable Turtl orchestration server.
+#
+# The RPM builds...
 # https://github/taw00/turtl-rpm
 # https://copr.fedorainfracloud.org/coprs/taw/turtl
 #
+# The upstream project...
 # https://turtlapp.com/
 # https://github.com/turtl
 
@@ -16,7 +20,7 @@
 # <name>-<vermajor.<verminor>-<pkgrel>[.<extraver>][.<snapinfo>].DIST[.<minorbump>]
 
 Name: turtl-server
-Summary: The Secure Collaborative Notebook
+Summary: The Secure Collaborative Notebook (server component)
 
 %define targetIsProduction 0
 
@@ -135,9 +139,11 @@ Turtl is a free and secure collaborative markdown-enabled notebook web
 application backend for the turtle-desktop app (or mobile app). turtl-server
 deploys the components of the server-side web application.
 
-With turtl-server you can now use your desktop or mobile Turtl applications
-to sync with either the default turtlapp.com webserver or your own used
-turtl-server server.
+Turtl Server is a self-hostable communication and sychronization hub enabling
+users to synchronize their Turtl client data across all of their devices and
+collaborate with other users on the network. As part of the sychronization
+process, a Turtl Server also serves as a secure backup of user content. All
+data is secured with end-to-end encryption.
 
 
 %prep
@@ -316,6 +322,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 
 %changelog
+* Sun Mar 10 2019 Todd Warner <t0dd_at_protonmail.com> 0.0.0-0.7.20190303.taw
+  - lots of relatively trivial changes, primarily to documentation & comments.
+
 * Thu Mar 07 2019 Todd Warner <t0dd_at_protonmail.com> 0.0.0-0.6.20190303.taw
 * Thu Mar 07 2019 Todd Warner <t0dd_at_protonmail.com> 0.0.0-0.5.20190303.taw
 * Thu Mar 07 2019 Todd Warner <t0dd_at_protonmail.com> 0.0.0-0.4.20190303.taw

@@ -1,12 +1,16 @@
 # turtl-desktop.spec
 # vim:tw=0:ts=2:sw=2:et:
 #
-# Turl - The Secure Collaborative Notebook
-#        Encrypted notes. Includes markdown support.
+# Turtl - The Secure Collaborative Notebook
+#         End-to-end encrypted markdown. Syncable. Shareable.
 #
+# Turtl Desktop -- The frontend, graphical client.
+#
+# The RPM builds...
 # https://github/taw00/turtl-rpm
 # https://copr.fedorainfracloud.org/coprs/taw/turtl
 #
+# The upstream project...
 # https://turtlapp.com/
 # https://github.com/turtl
 
@@ -33,7 +37,7 @@ Version: %{vermajor}.%{verminor}
 # RELEASE
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.2
+  %define _pkgrel 0.3
 %endif
 
 # MINORBUMP
@@ -93,18 +97,19 @@ ExclusiveArch: x86_64 i686 i586 i386
 # Sources as part of source RPM can be found at
 #   https://github.com/taw00/turtl-rpm
 %define _repo_archive %{name}-%{version}-%{buildQualifier}
-%define _source0_name desktop
-%define _source0 %{_source0_name}-%{version}
-%define _source1_name core
-%define _source1 %{_source1_name}-rs
-%define _source2 js
-%define _source4 %{name}-%{vermajor}-contrib
+%define sourcetree_desktop desktop
+%define sourcetree_core core
+%define sourcetree_js js
+%define sourcetree_contrib %{name}-%{vermajor}-contrib
+%define _source0 %{sourcetree_desktop}-%{version}
+%define _source1 %{sourcetree_core}-rs
+%define _source2 %{sourcetree_js}
+%define _source3 %{sourcetree_contrib}
 
 Source0: https://github.com/taw00/turtl-rpm/blob/master/SOURCES/%{_repo_archive}/%{_source0}.tar.gz
 Source1: https://github.com/taw00/turtl-rpm/blob/master/SOURCES/%{_repo_archive}/%{_source1}.tar.gz
 Source2: https://github.com/taw00/turtl-rpm/blob/master/SOURCES/%{_repo_archive}/%{_source2}.tar.gz
-Source3: https://github.com/taw00/turtl-rpm/blob/master/SOURCES/%{name}.appdata.xml
-#Source4: https://github.com/taw00/turtl-rpm/blob/master/SOURCES/%%{_repo_archive}/%%{name}-%%{vermajor}-contrib.tar.gz
+Source3: https://github.com/taw00/turtl-rpm/blob/master/SOURCES/%{_source3}.tar.gz
 
 BuildRequires: nodejs npm git
 BuildRequires: openssl-libs openssl-devel
@@ -129,15 +134,16 @@ BuildRequires: libappstream-glib
 BuildRequires: tree vim-enhanced less findutils dnf
 %endif
 
+# For the set-[hard,soft]-line-breaks.sh scripts
+Requires: sed grep
 
 
 # Unarchived source tree structure (extracted in {_builddir})
 #   sourceroot            turtl-desktop-0.7-20190226
-#    \_{_source0}             \_desktop-0.7.2.5 (renamed to desktop)
-#    \_{_source1}             \_core-rs (renamed to core)
+#    \_{_source0}             \_desktop (renamed from desktop-0.7.2.5)
+#    \_{_source1}             \_core (renamed from core-rs)
 #    \_{_source2}             \_js
-#NOTYET\_sourcecontribtree  \_turtl-desktop-0.7-contrib
-#%%define sourcecontribtree %%{name}-%%{vermajor}-contrib
+#    \_{_source3}             \_turtl-desktop-0.7-contrib
 %define sourceroot %{name}-%{vermajor}-%{buildQualifier}
 # /usr/share/turtl-desktop
 %define installtree %{_datadir}/%{name}
@@ -151,39 +157,40 @@ By default, notes are syncronized with turtlapp.com. Users or organizations may
 also host their own turtlapp servers to use as secure and privately managed
 targets for user and team notes (see also the turtl-server RPM).
 
+
 %prep
 # Prep section starts us in directory {_builddir}
+rm -rf %{sourceroot} ; mkdir -p %{sourceroot}
 # Extract into {_builddir}/{sourceroot}/
 # FYI: Each "setup" leaves you in the {sourceroot} directory
-rm -rf %{sourceroot} ; mkdir -p %{sourceroot}
 # Source0:...
 %setup -q -T -D -a 0 -n %{sourceroot}
-cd .. ; mv -v %{sourceroot}/%{_source0} %{sourceroot}/%{_source0_name}
+mv -v %{_source0} %{sourcetree_desktop}
 # Source1:...
 %setup -q -T -D -a 1 -n %{sourceroot}
-cd .. ; mv -v %{sourceroot}/%{_source1} %{sourceroot}/%{_source1_name}
+mv -v %{_source1} %{sourcetree_core}
+# Source2 and 3 don't have any funky naming inconsistencies
+# therefore they don't need to be renamed (mv'ed)
 # Source2:...
 %setup -q -T -D -a 2 -n %{sourceroot}
 # Source3:...
-cd .. ; cp ../SOURCES/%{name}.appdata.xml %{sourceroot}/ ; cd %{sourceroot}
-# Source4:...
-#%%setup -q -T -D -a 4 -n %%{sourceroot}
-cd ..
+%setup -q -T -D -a 3 -n %{sourceroot}
 
-# extract the rest of the tree
-cd %{sourceroot}
 # nwjs
 # https://github.com/nwjs/nw.js/releases
+# extract the rest of the tree (Source4, sorta)
+# too big to put in an RPM though
+# Note: We are still in the {sourceroot} directory
 %if "%{?_lib}" == "lib64"
-  %define _nwjs_dir nwjs-v%{nwjs_version}-linux-x64
+  %define _binarytree_nwjs nwjs-v%{nwjs_version}-linux-x64
 %else
-  %define _nwjs_dir nwjs-v%{nwjs_version}-linux-ia32
+  %define _binarytree_nwjs nwjs-v%{nwjs_version}-linux-ia32
 %endif
-#/usr/bin/curl -LO# https://dl.nwjs.io/v%{nwjs_version}/%{_nwjs_dir}.tar.gz
-#/usr/bin/curl -LO# https://toddwarner.keybase.pub/pub/srpms/build_support/%{_nwjs_dir}.tar.gz
-/usr/bin/curl -LOs https://toddwarner.keybase.pub/pub/srpms/build_support/%{_nwjs_dir}.tar.gz
-tar xzf %{_nwjs_dir}.tar.gz
-%define _nwjs_path $(readlink -e %{_nwjs_dir})
+#/usr/bin/curl -LO# https://dl.nwjs.io/v%%{nwjs_version}/%%{_binarytree_nwjs}.tar.gz
+#/usr/bin/curl -LO# https://toddwarner.keybase.pub/pub/srpms/build_support/%%{_binarytree_nwjs}.tar.gz
+/usr/bin/curl -LOs https://toddwarner.keybase.pub/pub/srpms/build_support/%{_binarytree_nwjs}.tar.gz
+tar xzf %{_binarytree_nwjs}.tar.gz
+%define _nwjs_path $(readlink -e %{_binarytree_nwjs})
 echo "\
 export PATH := ${PATH}:%{_nwjs_path}:%{_builddir}/%{sourceroot}/core
 export RUSTFLAGS := -L%{_libdir}
@@ -191,12 +198,11 @@ export SODIUM_LIB_DIR := %{_libdir}
 export SODIUM_STATIC := static
 export OPENSSL_LIB_DIR=%{_libdir}
 export OPENSSL_INCLUDE_DIR=%{_includedir}/openssl
-" > core/var.mk
+" > %{sourcetree_core}/var.mk
 
 # For debugging purposes...
 %if ! %{targetIsProduction}
-#cd .. ; tree -df -L 2 %{sourceroot} ; cd -
-cd .. ; tree -d -L 2 %{sourceroot} ; cd -
+  cd .. ; tree -d -L 2 %{sourceroot} ; cd -
 %endif
 
 
@@ -219,19 +225,19 @@ rm -rf ${HOME}/.npm/_cacache
 %endif
 
 # core
-cd core
+cd %{sourcetree_core}
 make
 cd ..
 
 # js
-cd js
+cd %{sourcetree_js}
 /usr/bin/npm install
 /usr/bin/npm audit fix
 cp config/config.js.default config/config.js
 cd ..
 
 # desktop
-cd desktop
+cd %{sourcetree_desktop}
 #/usr/bin/npm cache clean --force
 /usr/bin/npm install electron@3
 /usr/bin/npm install electron-context-menu
@@ -282,14 +288,16 @@ Keywords=secure;security;privacy;private;notes;bookmarks;collaborate;research;
 StartupNotify=true
 X-Desktop-File-Install-Version=0.23
 " > %{buildroot}%{_datadir}/applications/%{name}.desktop
-install -D -m644 -p desktop/scripts/resources/favicon.128.png %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{name}.png
+install -D -m644 -p %{sourcetree_desktop}/scripts/resources/favicon.128.png %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{name}.png
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
-install -D -m644 -p %{name}.appdata.xml %{buildroot}%{_metainfodir}/%{name}.appdata.xml
+install -D -m644 -p %{sourcetree_contrib}/%{name}.appdata.xml %{buildroot}%{_metainfodir}/%{name}.appdata.xml
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.appdata.xml
 
-install -D -m644 -p desktop/CONTRIBUTING.md %{buildroot}%{installtree}
+install -D -m644 -p %{sourcetree_desktop}/CONTRIBUTING.md %{buildroot}%{installtree}
+install -D -m755 -p %{sourcetree_contrib}/%{name}-set-soft-line-breaks.sh  %{buildroot}%{installtree}
+install -D -m755 -p %{sourcetree_contrib}/%{name}-set-hard-line-breaks.sh  %{buildroot}%{installtree}
 
-cd desktop/target/Turtl*
+cd %{sourcetree_desktop}/target/Turtl*
 # Nuke a particlarly troublesome unneeded but included electron component...
 rm -rf resources/app/node_modules/performance-now
 # This is horrible brute-force logic...
@@ -333,7 +341,12 @@ umask 007
 
 
 %changelog
-* Sat Mar 09 2019 Todd Warner <t0dd_at_protonmail.com> 0.7.2.5-0.2.20190226.taw3
+* Sun Mar 10 2019 Todd Warner <t0dd_at_protonmail.com> 0.7.2.5-0.3.20190226.taw
+  - created two commandline utilities to turn on and off soft line breaking.
+  - cleaned up the specfile a bit. more than a bit.
+  - shoved all the extra bits into a contrib tarball.
+
+* Sat Mar 09 2019 Todd Warner <t0dd_at_protonmail.com> 0.7.2.5-0.2.20190226.taw
   - fixed specfile changelog inconsistencies
   - fix PATH in var.mk during prep phase
   - minor tweaks to descriptions and such.
