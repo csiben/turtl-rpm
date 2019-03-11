@@ -294,8 +294,8 @@ install -D -m644 -p %{sourcetree_contrib}/%{name}.appdata.xml %{buildroot}%{_met
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.appdata.xml
 
 install -D -m644 -p %{sourcetree_desktop}/CONTRIBUTING.md %{buildroot}%{installtree}
-install -D -m755 -p %{sourcetree_contrib}/%{name}-set-soft-line-breaks.sh  %{buildroot}%{installtree}
-install -D -m755 -p %{sourcetree_contrib}/%{name}-set-hard-line-breaks.sh  %{buildroot}%{installtree}
+install -D -m755 -p %{sourcetree_contrib}/set-soft-line-breaks.sh  %{buildroot}%{installtree}
+install -D -m755 -p %{sourcetree_contrib}/set-hard-line-breaks.sh  %{buildroot}%{installtree}
 
 cd %{sourcetree_desktop}/target/Turtl*
 # Nuke a particlarly troublesome unneeded but included electron component...
