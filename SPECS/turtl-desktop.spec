@@ -37,7 +37,7 @@ Version: %{vermajor}.%{verminor}
 # RELEASE
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.3
+  %define _pkgrel 0.4
 %endif
 
 # MINORBUMP
@@ -328,10 +328,33 @@ ln -s %{installtree}/turtl %{buildroot}%{_bindir}/%{name}
 %{installtree}
 
 
+%pre
+# Retain soft line breaks setting if previously set as such
+# =1 is install, =2 is upgrade
+#  _sharedstatedir is /var/lib
+if [ $1 -gt 1 ] && [ -f %{installtree}/resources/app/build/app/main.js ] ; then
+  # if already configured to treat line breaks as "soft", touch a flag file
+  grep -Fq "breaks: false" %{installtree}/resources/app/build/app/main.js && mkdir -p %{_sharedstatedir}/rpm-state/turtl-desktop ; touch %{_sharedstatedir}/rpm-state/turtl-desktop/soft-line-breaks
+  ls -l %{_sharedstatedir}/rpm-state/turtl-desktop
+fi
+exit 0
+
+
 %post
 umask 007
 #/sbin/ldconfig > /dev/null 2>&1
 /usr/bin/update-desktop-database &> /dev/null || :
+
+
+%posttrans
+# Retain soft line breaks setting if previously set as such
+# sharedstatedir is /var/lib
+# if flag file exists, enforce the soft line breaks setting and erase flag
+if [ -f %%{_sharedstatedir}/rpm-state/turtl-desktop/soft-line-breaks ] ; then
+  sed -i.previous '{s/'"breaks: true"'/'"breaks: false"'/}' %{installtree}/resources/app/build/app/main.js
+fi
+rm -rf %{_sharedstatedir}/rpm-state/turtl-desktop
+exit 0
 
 
 %postun
@@ -341,6 +364,9 @@ umask 007
 
 
 %changelog
+* Mon Mar 11 2019 Todd Warner <t0dd_at_protonmail.com> 0.7.2.5-0.4.20190226.taw
+  - Retain soft line breaks setting if previously set as such.
+
 * Sun Mar 10 2019 Todd Warner <t0dd_at_protonmail.com> 0.7.2.5-0.3.20190226.taw
   - created two commandline utilities to turn on and off soft line breaking.
   - cleaned up the specfile a bit. more than a bit.

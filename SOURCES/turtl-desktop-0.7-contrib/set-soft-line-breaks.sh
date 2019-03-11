@@ -14,9 +14,8 @@ paragraph of text very much the same way a browser will treat a paragraph of
 text formated as HTML. We call this a 'soft' line break: A line break in the
 editor, but ignored when rendered in the final document.
 
-By default, a fresh install (or upgrade) of Turtl Desktop is set to treat a
-line break as 'hard' and therefore break the text at that line break in the
-final rendering.
+By default, a fresh install of Turtl Desktop is set to treat a line break as
+'hard' and therefore break the text at that line break in the final rendering.
 
 This command configures Turtl Desktop to honor the more traditional behavior
 'soft' line break of markdown rendering."
