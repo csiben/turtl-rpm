@@ -431,7 +431,8 @@ sudo systemctl start turtl-serverd.service
 
 Use a web-browser and browse to your domain...
 
-Instead of an Nginx default test page you should see rudimentary webpage and a message that says 'Greeting: "Hi."'
+Instead of an Nginx default test page you should see rudimentary webpage and a
+message that says 'Greeting: "Hi."'
 
 If this does not work, troubleshoot by looking at ....
 
@@ -443,7 +444,9 @@ sudo journalctl -xe
 
 ## [9] Configure a Turtl client to sync to your server
 
-Install a Turtl desktop application (like, for example, the one provided by this packager called 'turtl-desktop'). Or the Turtl mobile application (Android and probably iOS).
+Install a Turtl desktop application (like, for example, the one provided by
+this packager called 'turtl-desktop'). Or the Turtl mobile application (Android
+and probably iOS).
 
 When you first open the application, click on "Create account". Enter an email
 and password, but then click on "Advanced settings" and change the "Turtl
@@ -451,7 +454,8 @@ server" setting to your domain: `http://turtl.example.com` if you didn't set up
 TLS yet and make the config file changes I mentioned above, or
 `https://turtl.example.com`.
 
-The application should sync right up and ... you can now securely annotate your life! ;)
+The application should sync right up and ... you can now securely annotate your
+life! ;)
 
 ## Comments? Suggestions?
 Open an issue here, or send me a note via Keybase -- https://keybase.io/toddwarner
@@ -460,9 +464,18 @@ Open an issue here, or send me a note via Keybase -- https://keybase.io/toddwarn
 
 ## Addendum - Backing up your Turtl Server
 
-There is now a backup script in /usr/share/turtl-server/
+There is now a backup script included with the turtl-server package and can be
+found in /usr/share/turtl-server/
 
-Once your Turl Server is set up, just copy the backup script (and it's helper
-script) to your local desktop and run it (instructions in the comments of the
-script.
+Once your Turl Server is set up, just copy the backup script (and its helper
+script) to your local desktop (not on the server itself) and run it
+(instructions in the comments of the script.
+
+## Addendum - Configure default Nginx landing pages
+
+Edit the default Nginx landing pages (browse to your server by IP address, for
+example) and replace all the default pages with your own or blank pages. This
+includes `index.html` and the error pages, `404.html`, etc. By default they are
+found in  `/usr/share/nginx/html/`
+
 

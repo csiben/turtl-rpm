@@ -29,7 +29,7 @@ mkdir -p $ARCHIVEBASENAME
 cd $ARCHIVEBASENAME
 
 if [ "$NGINX_ENABLED" -eq "1" ] ; then
-echo "#### Copying files (nginx)..."
+echo "#### Copying files (nginx configuration)..."
 mkdir -p ./etc/ssl
 cp -a /etc/ssl/dhparam.pem ./etc/ssl/
 mkdir -p ./etc/nginx/conf.d
@@ -38,14 +38,20 @@ mkdir -p ./etc/sysconfig
 cp -a /etc/sysconfig/turtl-serverd ./etc/sysconfig/
 mkdir ./root
 cp -a /root/.acme.sh ./root/DOTacme.sh
+
+echo "#### Copying files (nginx default site)..."
+mkdir -p ./usr/share/nginx
+cp -a /usr/share/nginx/html ./usr/share/nginx/
 fi
 
 echo "#### Copying files (postgresql)..."
 mkdir -p ./var/lib
 cp -a /var/lib/pgsql ./var/lib/
+
 echo "#### Copying files (turtl-server)..."
 cp -a /var/lib/turtl-server ./var/lib/
 
+echo "#### Restarting services..."
 systemctl start turtl-serverd.service
 systemctl start postgresql.service
 if [ "$NGINX_ENABLED" -eq "1" ] ; then
