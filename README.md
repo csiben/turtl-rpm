@@ -111,8 +111,8 @@ utilities are provided with the `turtl-desktop` RPM.
 * To switch back to Turtl Desktop's default behavior, just run...  
   `sudo /usr/share/turtl-desktop/set-hard-line-breaks.sh`
 
-You can read more about a "soft line-break", otherwise known as a "softbreak",
-"soft return", or "soft wrap" here:
+You can read more about a "soft line-break", otherwise known as a "soft break"
+or "soft return" here:
 <https://en.wikipedia.org/wiki/Line_wrap_and_word_wrap#Soft_and_hard_returns>
 
 ## Comments? Suggestions?
