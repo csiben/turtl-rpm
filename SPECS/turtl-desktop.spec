@@ -266,6 +266,8 @@ make release-linux
 #   _mandir = /usr/share/man
 #   _sysconfdir = /etc
 #   _libdir = /usr/lib or /usr/lib64 (depending on system)
+#  Note: We install to /usr/share/ because /opt is for unpackaged applications
+#        http://www.pathname.com/fhs/pub/fhs-2.3.html
 
 # Create directories
 install -d %{buildroot}%{_libdir}/%{name}
