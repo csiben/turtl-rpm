@@ -44,7 +44,6 @@ fine document._
     - [Edit the Turtl configuration file](#edit-the-turtl-configuration-file)
     - [Initialize the database structure](#initialize-the-database-structure)
   - [[6] Setup and configure the Nginx webserver](#6-setup-and-configure-the-nginx-webserver)
-    - [Boost Nginx's `types_hash_max_size` from `2048` to `4096`](#boost-nginxs-types_hash_max_size-from-2048-to-4096)
     - [Firewall: Poke a hole to the outside world for ports 80 (http) and 443 (https)](#firewall-poke-a-hole-to-the-outside-world-for-ports-80-http-and-443-https)
     - [Start nginx.service](#start-nginxservice)
     - [Setup your domain and point DNS to your VPS](#setup-your-domain-and-point-dns-to-your-vps)
@@ -205,12 +204,6 @@ CTRL-C to shut down again
 
 Helpful: <https://fedoraproject.org/wiki/Nginx>
 
-#### Boost Nginx's `types_hash_max_size` from `2048` to `4096`
-
-This has nothing to do with anything except that Nginx will forever log a
-warning that the types_hash_max_size is too small. This is changed directly in
-the `/etc/nginx/nginx.conf` configuration file.
-
 #### Firewall: Poke a hole to the outside world for ports 80 (http) and 443 (https)
 ####           and maybe port 8181 (turtl-server direct)
 
@@ -348,6 +341,7 @@ server {
     # Comment out the next line if you wish non-secure port 80 to be available
     # for use by the Turtl remote clients.
     return 302 https://$server_name$request_uri;
+    types_hash_max_size 4096;
     location / {
       proxy_set_header X-Real-IP $remote_addr;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -367,6 +361,7 @@ server {
     listen 443 ssl http2  ;
     listen [::]:443 ssl http2  ;
     server_name turtl.example.com;
+    types_hash_max_size 4096;
 
     # SSL requires extra configuration
 
