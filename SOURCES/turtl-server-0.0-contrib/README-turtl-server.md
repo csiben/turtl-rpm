@@ -257,7 +257,7 @@ document), by examining the Nginx log files: `sudo tail -f /var/log/nginx/*.log`
 
 #### Generate (issue) a TLS certicate from Let's Encrypt for this service
 
-We use the fine acme.sh utility from Neil Pang to issue ourselves a TLS
+We use the fine `acme.sh` utility from Neil Pang to issue ourselves a TLS
 certificate from Let's Encrypt.
 
 Reference: <https://en.wikipedia.org/wiki/Let's_Encrypt> and <https://github.com/Neilpang/acme.sh>
@@ -268,55 +268,59 @@ configure nginx in unnatural ways to enable this just yet. We already directed
 our domain to our IP address, so we just need to shut down nginx and let acme.sh
 do it's thing in "standalone" mode.
 
-Shut down nginx
-```
-sudo systemctl stop nginx
-```
+Log into root fully. Install `socat` and `acme.sh`.
 
-Install the `socat` RPM (mini-webserver)
 ```
-sudo dnf install socat -y
-```
-
-Install acme.sh (recommended you do this as root and a fully logged in)
-```
+# Login to root
 sudo su -
-# This will...
-# - create a ~/.acme.sh/ directory and copy the acme.sh script into it
-# - edit root's ~/.bashrc file and create an alias acme.sh=~/.acme.sh/acme.sh
-# - set up a cronjob to run daily to check and renew the certs if need be
+```
+
+```
+# Install socat (mini-webserver) and the acme tools. Re-source root's '~/.bashrc' file
+dnf install socat -y
 curl https://get.acme.sh | sh
-```
-```
-# CTRL-D to log out of root...
-# ...and then log back in again
-sudo su -
+. ~/.bashrc
 ```
 
-Issue your TLS certificate (using our turtl.example.com example)
+> Note that the acme installer will perform 3 actions:
+>
+> 1. Create and copy `acme.sh` to your home dir ($HOME): `~/.acme.sh/`  
+>    All certs will be placed in this folder too.
+> 2. Create alias for: `acme.sh=~/.acme.sh/acme.sh`
+> 3. Create daily cron job to check and renew the certs if needed.
+
+Set these temp environment variables to make things easier...
 ```
-# This will populate ~/.acme.sh/turtl.example.com/ with certs and keys and such
-acme.sh --issue --standalone -d turtl.example.com
+DOMAIN=example.com
+SITE=turtl.${DOMAIN}
 ```
 
-Install your cert and key to an appropriate directory to be used by Nginx
+Issue your TLS certificate (using our turtl.example.com example).
+```
+# This will populate ~/.acme.sh/$SITE/ with certs and keys and such
+# If your DNS is not set up, this will fail.
+systemctl stop nginx
+acme.sh --issue --standalone -d $SITE
+systemctl start nginx
+```
+
+**Install your cert and key to an appropriate directory to be used by Nginx...**
 ```
 # We're still root...
-DOMAIN=turtl.example.com
 mkdir -p /etc/nginx/ssl/$DOMAIN
 
-acme.sh --install-cert -d $DOMAIN \
---fullchain-file /etc/nginx/ssl/$DOMAIN/$DOMAIN.cert.pem \
---key-file       /etc/nginx/ssl/$DOMAIN/$DOMAIN.key.pem  \
+acme.sh --install-cert -d $SITE \
+--fullchain-file /etc/nginx/ssl/$DOMAIN/$SITE.cert.pem \
+--key-file       /etc/nginx/ssl/$DOMAIN/$SITE.key.pem  \
 --reloadcmd     "systemctl force-reload nginx"
 ```
 
-Populate openssl dhparams to /etc/ssl...
+**Populate openssl dhparams to `/etc/ssl/`...**
+
 ```
 # We're still root...
 openssl dhparam -out /etc/ssl/dhparam.pem 4096
 ```
-
 
 ## [7] Configure Nginx to service Turtl Server
 
@@ -335,13 +339,15 @@ upstream turtl {
 }
 
 server {
-    listen 80 ;
-    listen [::]:80 ;
+    listen 80;
+    listen [::]:80;
+
     server_name turtl.example.com;
+    types_hash_max_size 4096;
+
     # Comment out the next line if you wish non-secure port 80 to be available
     # for use by the Turtl remote clients.
     return 302 https://$server_name$request_uri;
-    types_hash_max_size 4096;
     location / {
       proxy_set_header X-Real-IP $remote_addr;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -358,8 +364,9 @@ server {
 }
 
 server {
-    listen 443 ssl http2  ;
-    listen [::]:443 ssl http2  ;
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+
     server_name turtl.example.com;
     types_hash_max_size 4096;
 
@@ -367,8 +374,8 @@ server {
 
     ### SSL Stuff
     ## troubleshoot with: openssl s_client -debug -connect turtl.example.com:443
-    ssl_certificate /etc/nginx/ssl/turtl.example.com/turtl.example.com.cert.pem;
-    ssl_certificate_key /etc/nginx/ssl/turtl.example.com/turtl.example.com.key.pem;
+    ssl_certificate /etc/nginx/ssl/example.com/turtl.example.com.cert.pem;
+    ssl_certificate_key /etc/nginx/ssl/example.com/turtl.example.com.key.pem;
 
     # openssl dhparam -out /etc/ssl/dhparam.pem 4096
     ssl_dhparam /etc/ssl/dhparam.pem;
@@ -472,5 +479,3 @@ Edit the default Nginx landing pages (browse to your server by IP address, for
 example) and replace all the default pages with your own or blank pages. This
 includes `index.html` and the error pages, `404.html`, etc. By default they are
 found in  `/usr/share/nginx/html/`
-
-
