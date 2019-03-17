@@ -1,4 +1,4 @@
-# Install and host a Turtl Server
+# Install and Host a Turtl Server
 
 Turtl Server is a self-hostable communication and sychronization hub enabling
 users to synchronize their Turtl client data across all of their devices and
