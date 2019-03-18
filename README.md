@@ -92,27 +92,25 @@ Turtl clients using the RPMs provided here.
 
 ## A comment about how Turtl Desktop word-wraps paragraphs of text
 
-Traditional markdown renders a carriage return (line break) as a space with any
-following text concatenated to the last, thus allowing the document margins to
-dictate how a paragraph of text is word-wrapped. I.e, An application that
-renders markdown into its more published form will, traditionally, treat a
-paragraph of text very much the same way a browser will treat a paragraph of
-text formated as HTML. We call this a 'soft' line break: A line break in the
-editor, but ignored when rendered in the final document.
+A soft break: When line breaks in a paragraph of text are ignored upon rendering
+the final published content. The markdown interpreter will freely flow the
+paragraph of text as needed to fit the dimensions of the document. Hard breaks
+can still be forced with <br/> or a double-space at the end of a line.
+Traditional markdown assumes 'soft breaking' behavior.
 
-By default, a fresh install of Turtl Desktop is set to treat a line break as
-'hard' and therefore break the text at that line break in the final rendering.
+A hard break: When every line break in a paragraph of text is treated as a
+carriage return in the final published content, regardless of the dimensions and
+margin spacing of the output medium. Turtl has 'hard breaking' behavior set by
+default.
+
+Included with the turtl-desktop RPM package is a utilty to toggle between the
+two behaviors: `sudo /usr/share/turtl-desktop/toggle-break-behavior.sh`
 
 If you wish to enable traditional 'soft' line breaking, two commandline
 utilities are provided with the `turtl-desktop` RPM.
 
-* To switch to line breaks treated as soft line breaks, just run...  
-  `sudo /usr/share/turtl-desktop/set-soft-line-breaks.sh`
-* To switch back to Turtl Desktop's default behavior, just run...  
-  `sudo /usr/share/turtl-desktop/set-hard-line-breaks.sh`
-
-You can read more about a "soft line-break", otherwise known as a "soft break"
-or "soft return" here:
+You can read more about a "soft line-breaks", otherwise known as a "soft breaks" or "soft
+returns" here:
 <https://en.wikipedia.org/wiki/Line_wrap_and_word_wrap#Soft_and_hard_returns>
 
 ## Comments? Suggestions?

@@ -29,9 +29,7 @@ fine document._
 
 **Table of Contents**
 <!-- TOC -->
-
-- [Install and host a Turtl Server](#install-and-host-a-turtl-server)
-  - [[1] Set up and configured a minimal headless VPS](#1-set-up-and-configured-a-minimal-headless-vps)
+  - [[1] Set up and configure a headless VPS](#1-set-up-and-configured-a-minimal-headless-vps)
   - [[2] Install the software...](#2-install-the-software)
   - [[3] Enable and start the Postgresql DB](#3-enable-and-start-the-postgresql-db)
   - [[4] Configure a Postgresql user and database instance specifically for the Turtl Server application](#4-configure-a-postgresql-user-and-database-instance-specifically-for-the-turtl-server-application)
@@ -45,14 +43,12 @@ fine document._
     - [Initialize the database structure](#initialize-the-database-structure)
   - [[6] Setup and configure the Nginx webserver](#6-setup-and-configure-the-nginx-webserver)
     - [Firewall: Poke a hole to the outside world for ports 80 (http) and 443 (https)](#firewall-poke-a-hole-to-the-outside-world-for-ports-80-http-and-443-https)
+    - [and maybe port 8181 (turtl-server direct)](#and-maybe-port-8181-turtl-server-direct)
     - [Start nginx.service](#start-nginxservice)
     - [Setup your domain and point DNS to your VPS](#setup-your-domain-and-point-dns-to-your-vps)
     - [Generate (issue) a TLS certicate from Let's Encrypt for this service](#generate-issue-a-tls-certicate-from-lets-encrypt-for-this-service)
   - [[7] Configure Nginx to service Turtl Server](#7-configure-nginx-to-service-turtl-server)
-- [Doing this as root](#doing-this-as-root)
-
 <!-- /TOC -->
-
 
 There are four components to a Turtl Server.
 1. A VPS or physical Fedora Linux server.
@@ -60,7 +56,7 @@ There are four components to a Turtl Server.
 3. A database. Specifically PostgreSQL
 4. A webserver. In this example, Nginx.
 
-## [1] Set up and configured a minimal headless VPS
+## [1] Set up and configure a headless VPS
 
 Instruction for how to deploy and manage a general purpose minimal server for all kinds of workloads can be found here: <https://github.com/taw00/howto/blob/master/howto-deploy-and-configure-a-minimalistic-fedora-linux-server.md>
 

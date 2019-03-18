@@ -37,7 +37,7 @@ Version: %{vermajor}.%{verminor}
 # RELEASE
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.4
+  %define _pkgrel 0.5
 %endif
 
 # MINORBUMP
@@ -296,8 +296,7 @@ install -D -m644 -p %{sourcetree_contrib}/%{name}.appdata.xml %{buildroot}%{_met
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.appdata.xml
 
 install -D -m644 -p %{sourcetree_desktop}/CONTRIBUTING.md %{buildroot}%{installtree}
-install -D -m755 -p %{sourcetree_contrib}/set-soft-line-breaks.sh  %{buildroot}%{installtree}
-install -D -m755 -p %{sourcetree_contrib}/set-hard-line-breaks.sh  %{buildroot}%{installtree}
+install -D -m755 -p %{sourcetree_contrib}/toggle-break-behavior.sh  %{buildroot}%{installtree}
 
 cd %{sourcetree_desktop}/target/Turtl*
 # Nuke a particlarly troublesome unneeded but included electron component...
@@ -367,6 +366,10 @@ umask 007
 
 
 %changelog
+* Sun Mar 17 2019 Todd Warner <t0dd_at_protonmail.com> 0.7.2.5-0.5.20190226.taw
+  - merged the two commandline utilities into one that toggles between two  
+    line break behavior settings: 'soft' and 'hard'
+
 * Mon Mar 11 2019 Todd Warner <t0dd_at_protonmail.com> 0.7.2.5-0.4.20190226.taw
   - Retain soft line breaks setting if previously set as such.
 
