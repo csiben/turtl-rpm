@@ -1,4 +1,4 @@
-# Turtl: The Secure Collaborative Notebook, for Fedora Linux
+# Turtl: The Secure Collaborative Notebook - for Fedora Linux
 
 Turtl is a nifty desktop and mobile application for writing and organizing
 [markdown](https://en.wikipedia.org/wiki/Markdown)-formatted documents and then
