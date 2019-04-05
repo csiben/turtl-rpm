@@ -14,10 +14,10 @@ You can read more about what Turtl is [here](https://turtlapp.com).
 `turtl-desktop` and `turtl-server`
 
 This repository provides and maintains source packages that can be built to run
-on Fedora Linux 29+ and (soon) EL7 on x86_64. Binary (fully functional)
-application packages based on these source packages are available elsewhere
-(see below) and make running either a Turtl desktop or a Turtl server
-relatively easy install and maintain.
+on Fedora Linux 29+ on x86_64. Binary (fully functional) application packages
+based on these source packages are available elsewhere (see below) and make
+running either a Turtl desktop or a Turtl server relatively easy install and
+maintain.
 
 The two available applications.
 
@@ -79,19 +79,6 @@ sudo dnf install -y turtl-desktop
 sudo dnf upgrade -y turtl-desktop
 ```
 
-**(when available) For RHEL or CentOS users (EL7 or "EPEL")...**
-
-```
-# Initial install...
-sudo yum install -y yum-plugin-copr
-sudo yum copr enable taw/turtl
-sudo yum install -y turtl
-```
-```
-# Update/upgrade...
-sudo yum update -y turtl
-```
-
 Now find Turtl in your menus or normal application search and run it.
 
 * Note1: desktop data for an individual user is, by default, located here:
@@ -135,7 +122,7 @@ Open an issue here, or send me a note via Keybase -- https://keybase.io/toddwarn
 ## Joplin, that other notebook application
 
 I also build packages for Joplin. Another encrypted multi-device opensource
-notebook application. You can find more information about that
+notebook application.  You can find more information about that
 [here](https://github.com/taw00/joplin-rpm).
 
 The two projects overlap in functionality, but Turtl is more geared for the
@@ -146,6 +133,7 @@ a postit-note feel. Turtl has a more powerful security model and enables
 sharing of documents making it very collaborative.
 
 Both are great projects. And yes, there are a lot of great markdown
-notebook-ish applications out there. But Turtl and Joplin are my two favorite
-projects in this application space.
+notebook-ish applications out there, but only a few with full end-to-end
+security like Turtl and Joplin. Definitely my two favorite projects in this
+application space.
 
