@@ -37,7 +37,7 @@ Version: %{vermajor}.%{verminor}
 # RELEASE
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.5
+  %define _pkgrel 0.6
 %endif
 
 # MINORBUMP
@@ -74,8 +74,6 @@ Version: %{vermajor}.%{verminor}
 Release: %{_release}
 # ----------- end of release building section
 
-# https://fedoraproject.org/wiki/Licensing:Main?rd=Licensing
-# Apache Software License 2.0
 License: GPL 3.0
 URL: https://turtlapp.com
 # Note, for example, this will not build on ppc64le
@@ -89,13 +87,8 @@ ExclusiveArch: x86_64 i686 i586 i386
 %define _unique_build_ids 1
 %define _build_id_links alldebug
 
-# https://fedoraproject.org/wiki/Changes/Harden_All_Packages
-# https://fedoraproject.org/wiki/Packaging:Guidelines#PIE
 %define _hardened_build 1
 
-# https://fedoraproject.org/wiki/Packaging:SourceURL
-# Sources as part of source RPM can be found at
-#   https://github.com/taw00/turtl-rpm
 %define _repo_archive %{name}-%{version}-%{buildQualifier}
 %define sourcetree_desktop desktop
 %define sourcetree_core core
@@ -123,15 +116,13 @@ BuildRequires: python2 gcc-c++
 BuildRequires: desktop-file-utils
 %if 0%{?suse_version:1}
 BuildRequires: appstream-glib
-#BuildRequires: libappstream-glib8 appstream-glib
 %else
 BuildRequires: libappstream-glib
 %endif
 
-#t0dd: I will often add tree, vim-enhanced, and less for mock environment
-#      introspection
+# I will often add these packages for mock environment introspection
 %if ! %{targetIsProduction}
-BuildRequires: tree vim-enhanced less findutils dnf
+BuildRequires: tree vim-enhanced less findutils
 %endif
 
 # For the set-[hard,soft]-line-breaks.sh scripts
@@ -162,7 +153,7 @@ targets for user and team notes (see also the turtl-server RPM).
 # Prep section starts us in directory {_builddir}
 rm -rf %{sourceroot} ; mkdir -p %{sourceroot}
 # Extract into {_builddir}/{sourceroot}/
-# FYI: Each "setup" leaves you in the {sourceroot} directory
+# Each "setup" leaves you in the {sourceroot} directory
 # Source0:...
 %setup -q -T -D -a 0 -n %{sourceroot}
 mv -v %{_source0} %{sourcetree_desktop}
@@ -179,7 +170,7 @@ mv -v %{_source1} %{sourcetree_core}
 # nwjs
 # https://github.com/nwjs/nw.js/releases
 # extract the rest of the tree (Source4, sorta)
-# too big to put in an RPM though
+# too big to put in a SRPM though in github
 # Note: We are still in the {sourceroot} directory
 %if "%{?_lib}" == "lib64"
   %define _binarytree_nwjs nwjs-v%{nwjs_version}-linux-x64
@@ -210,7 +201,6 @@ export OPENSSL_INCLUDE_DIR=%{_includedir}/openssl
 # Build section starts us in directory {_builddir}/{sourceroot}
 
 # Clearing npm's cache and package lock to eliminate SHA1 integrity issues.
-#%%{warn: "taw build note: I keep running into this fatal error --'integrity checksum failed when using sha1'. Taking dramatic action -brute force- in an attempt to remedy it.' If someone can figure out what is causing this, I will buy them a beer."}
 /usr/bin/npm cache clean --force
 rm -rf ${HOME}/.npm/_cacache
 #rm -f package-lock.json
@@ -366,6 +356,10 @@ umask 007
 
 
 %changelog
+* Fri Apr 05 2019 Todd Warner <t0dd_at_protonmail.com> 0.7.2.5-0.6.20190226.taw
+  - cleaned up specfile
+  - enforced execution (not sourcing) of toggle script
+
 * Sun Mar 17 2019 Todd Warner <t0dd_at_protonmail.com> 0.7.2.5-0.5.20190226.taw
   - merged the two commandline utilities into one that toggles between two  
     line break behavior settings: 'soft' and 'hard'

@@ -42,8 +42,7 @@ Version: %{vermajor}.%{verminor}
 %endif
 
 # MINORBUMP
-# (for very small or rapid iterations)
-%define minorbump taw
+%define minorbump taw1
 #%%undefine minorbump
 
 #
@@ -77,8 +76,6 @@ Version: %{vermajor}.%{verminor}
 Release: %{_release}
 # ----------- end of release building section
 
-# https://fedoraproject.org/wiki/Licensing:Main?rd=Licensing
-# Apache Software License 2.0
 License: GPL 3.0
 URL: https://turtlapp.com
 # Note, for example, this will not build on ppc64le
@@ -92,13 +89,8 @@ ExclusiveArch: x86_64 i686 i586 i386
 %define _unique_build_ids 1
 %define _build_id_links alldebug
 
-# https://fedoraproject.org/wiki/Changes/Harden_All_Packages
-# https://fedoraproject.org/wiki/Packaging:Guidelines#PIE
 %define _hardened_build 1
 
-# https://fedoraproject.org/wiki/Packaging:SourceURL
-# Sources as part of source RPM can be found at
-#   https://github.com/taw00/turtl-rpm
 %if 0%{?buildQualifier:1}
 Source0: https://github.com/taw00/turtl-rpm/blob/master/SOURCES/%{name}-%{version}-%{buildQualifier}.tar.gz
 %else
@@ -113,11 +105,9 @@ BuildRequires: nodejs npm git
 BuildRequires: systemd
 %{?systemd_requires}
 
-#t0dd: Utilities made available for non-"production" builds in order to enable
-#      mock environment introspection
+# I will often add these packages for mock environment introspection
 %if ! %{targetIsProduction}
 BuildRequires: tree vim-enhanced less findutils
-#BuildRequires: dnf
 %endif
 
 # Unarchived source tree structure (extracted in {_builddir})
@@ -149,7 +139,7 @@ data is secured with end-to-end encryption.
 %prep
 # Prep section starts us in directory {_builddir}
 # Extract into {_builddir}/{sourceroot}/
-# FYI: Each "setup" leaves you in the {sourceroot} directory
+# Each "setup" leaves you in the {sourceroot} directory
 rm -rf %{sourceroot} ; mkdir -p %{sourceroot}
 # Source0:...
 %setup -q -T -D -a 0 -n %{sourceroot}
@@ -166,7 +156,6 @@ cd .. ; tree -d -L 2 %{sourceroot} ; cd -
 # Build section starts us in directory {_builddir}/{sourceroot}
 
 # Clearing npm's cache and package lock to eliminate SHA1 integrity issues.
-#%%{warn: "taw build note: I keep running into this fatal error --'integrity checksum failed when using sha1'. Taking dramatic action -brute force- in an attempt to remedy it.' If someone can figure out what is causing this, I will buy them a beer."}
 /usr/bin/npm cache clean --force
 rm -rf ${HOME}/.npm/_cacache
 #rm -f package-lock.json
@@ -177,9 +166,11 @@ cp %{sourcecontribtree}/config.yaml.default %{sourcetree}/config/config.yaml
 cd %{sourcetree}
 /usr/bin/npm install 
 /usr/bin/npm audit fix
+
 # Can't install pm2 because requires /sbin/openrc-run which is not available
 # for Fedora that I can tell
 #/usr/bin/npm install pm2@latest
+
 # Nuke a particlarly troublesome unneeded but included electron components...
 # Apparently "uninstall" just won't remove it. Grr.
 #/usr/bin/npm uninstall performance-new

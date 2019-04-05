@@ -1,14 +1,10 @@
 #!/usr/bin/bash
-
-issourced=0
-$(return > /dev/null 2>&1)
-if (( "$?" == 0 )) ; then
-  issourced=1
-fi
+# vim:tw=0:ts=2:sw=2:et:
+$(return 0 > /dev/null 2>&1) && echo "please run directly, not as a sourced script" && return 1
 
 if [ "$EUID" -ne 0 ]
-  then echo "Please run as root"
-  (( $issourced == 1 )) && return 1 || exit 1
+  then echo "Please run with root priviledges"
+  exit 1
 fi
 
 echo "
@@ -46,10 +42,10 @@ if [ -f "$file" ]; then
       echo "## Note: This change will not take effect until Turl Desktop is restarted."
     else
       echo "ERROR: This should not happen. Could not find line break setting in $file"
-      (( $issourced == 1 )) && return 1 || exit 1
+      exit 1
     fi
   fi
 else
   echo "ERROR: This should not happen. File not found: $file"
-  (( $issourced == 1 )) && return 1 || exit 1
+  exit 1
 fi
