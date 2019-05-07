@@ -26,18 +26,19 @@ Summary: The Secure Collaborative Notebook
 
 # ie. if the dev team (or I in this case) includes things like rc3 or the
 # date in the source filename
-%define buildQualifier 20190226
+%define buildQualifier 20190419
+%define buildQualifier_desktop pre-sync-fix
 %define nwjs_version 0.36.2
 
 # VERSION
 %define vermajor 0.7
-%define verminor 2.5
+%define verminor 2.6
 Version: %{vermajor}.%{verminor}
 
 # RELEASE
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.6
+  %define _pkgrel 0.1
 %endif
 
 # MINORBUMP
@@ -94,7 +95,11 @@ ExclusiveArch: x86_64 i686 i586 i386
 %define sourcetree_core core
 %define sourcetree_js js
 %define sourcetree_contrib %{name}-%{vermajor}-contrib
+%if 0%{?buildQualifier_desktop:1}
+%define _source0 %{sourcetree_desktop}-%{version}-%{buildQualifier_desktop}
+%else
 %define _source0 %{sourcetree_desktop}-%{version}
+%endif
 %define _source1 %{sourcetree_core}-rs
 %define _source2 %{sourcetree_js}
 %define _source3 %{sourcetree_contrib}
@@ -356,6 +361,11 @@ umask 007
 
 
 %changelog
+* Fri Apr 19 2019 Todd Warner <t0dd_at_protonmail.com> 0.7.2.6-0.1.20190419.taw
+  - 0.7.2.6
+  - upstream tossing in things like "pre-sync-fix" into the versionname (but  
+    just for the desktop archive (sigh), so had to account for that.
+
 * Fri Apr 05 2019 Todd Warner <t0dd_at_protonmail.com> 0.7.2.5-0.6.20190226.taw
   - cleaned up specfile
   - enforced execution (not sourcing) of toggle script

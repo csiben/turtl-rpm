@@ -26,7 +26,7 @@ Summary: The Secure Collaborative Notebook (server component)
 
 # ie. if the dev team (or I in this case) includes things like rc3 or the
 # date in the source filename
-%define buildQualifier 20190303
+%define buildQualifier 20190419
 #%%undefine buildQualifier
 
 # VERSION
@@ -38,11 +38,11 @@ Version: %{vermajor}.%{verminor}
 # package release, and potentially extrarel
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.6
+  %define _pkgrel 0.8
 %endif
 
 # MINORBUMP
-%define minorbump taw1
+%define minorbump taw
 #%%undefine minorbump
 
 #
@@ -313,6 +313,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 
 %changelog
+* Fri Apr 19 2019 Todd Warner <t0dd_at_protonmail.com> 0.0.0-0.8.20190419.taw
+  - updated to repo as of 2019-04-19
+
 * Sun Mar 10 2019 Todd Warner <t0dd_at_protonmail.com> 0.0.0-0.7.20190303.taw
   - lots of relatively trivial changes, primarily to documentation & comments.
 
