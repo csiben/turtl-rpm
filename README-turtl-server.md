@@ -318,16 +318,18 @@ acme.sh --install-cert -d $SITE \
 openssl dhparam -out /etc/ssl/dhparam.pem 4096
 ```
 
-**Edit `crontab` entry to deal with nginx being in the way**
+**Edit `crontab` entry to deal with `nginx` being in the way**
 
 ```
 # We're still root
 crontab -e
 ```
-The entry will look something like this
+The entry will look something like this:
 ```
 20 0 * * * "/root/.acme.sh"/acme.sh --cron --home "/root/.acme.sh" > /dev/null
 ```
+
+_Note: This example sets the command to run every day at 12:20am._
 
 But you want to make sure it looks more like this:
 ```
