@@ -318,6 +318,23 @@ acme.sh --install-cert -d $SITE \
 openssl dhparam -out /etc/ssl/dhparam.pem 4096
 ```
 
+**Edit `crontab` entry to deal with nginx being in the way**
+
+```
+# We're still root
+crontab -e
+```
+The entry will look something like this
+```
+20 0 * * * "/root/.acme.sh"/acme.sh --cron --home "/root/.acme.sh" > /dev/null
+```
+
+But you want to make sure it looks more like this:
+```
+20 0 * * * { /usr/bin/systemctl stop nginx ; "/root/.acme.sh"/acme.sh --cron --home "/root/.acme.sh" ; /usr/bin/systemctl start nginx } >> /var/log/turtl-server/acme.log 2>&1
+```
+
+
 ## [7] Configure Nginx to service Turtl Server
 
 All Nginx configuration resides in `/etc/nginx/nginx.conf` and
