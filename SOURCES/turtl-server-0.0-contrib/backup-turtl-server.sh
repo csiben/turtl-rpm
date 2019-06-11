@@ -8,11 +8,11 @@
 # Very ansible-like. Probably should just use ansible.
 #
 # Note, this will also archive data from Nginx's default webroot:
-#  '/var/lib/nginx/html'
+#  '/usr/share/nginx/html'
 # If you changed the location of that root (configured in
 #  '/etc/nginx/nginx.conf' and/or '/etc/nginx/config.d/*.conf')
-# Then alter the _backup-turtl-server*.sh script appropriately.
-# Example locations that are very typically used:
+#  then alter the _backup-turtl-server*.sh script appropriately.
+#  Example locations that are very typically used:
 #   '/srv/www', '/var/www', and '/var/lib/www'. Etc.
 
 if [ "$#" -ne "3" ]; then

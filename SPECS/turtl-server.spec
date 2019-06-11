@@ -38,7 +38,7 @@ Version: %{vermajor}.%{verminor}
 # package release, and potentially extrarel
 %define _pkgrel 1
 %if ! %{targetIsProduction}
-  %define _pkgrel 0.9
+  %define _pkgrel 0.10
 %endif
 
 # MINORBUMP
@@ -237,6 +237,7 @@ install -D -m644 -p %{sourcecontribtree}/systemd/usr-lib-tmpfiles.d_%{name}d.con
 # other
 install -D -m644 -p %{sourcecontribtree}/README-turtl-server.md %{buildroot}%{installtree}/
 install -D -m770 -p %{sourcecontribtree}/backup-*.sh %{buildroot}%{installtree}/
+install -D -m770 -p %{sourcecontribtree}/_backup-*.sh %{buildroot}%{installtree}/
 
 
 cd %{sourcetree}
@@ -313,6 +314,9 @@ test -f %{_bindir}/firewall-cmd && firewall-cmd --reload --quiet || true
 
 
 %changelog
+* Tue Jun 11 2019 Todd Warner <t0dd_at_protonmail.com> 0.0.0-0.10.20190524.taw
+  - _backup*.sh -- backup helper script was never included. Oops!
+  - fixed default webroot in backup script comments
 
 * Fri May 24 2019 Todd Warner <t0dd_at_protonmail.com> 0.0.0-0.9.20190524.taw
   - updated to repo as of 2019-05-24
