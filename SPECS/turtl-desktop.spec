@@ -26,8 +26,8 @@ Summary: The Secure Collaborative Notebook
 
 # ie. if the dev team (or I in this case) includes things like rc3 or the
 # date in the source filename
-%define buildQualifier 20190419
-%define buildQualifier_desktop pre-sync-fix
+%define buildQualifier 20190512
+%define buildQualifier_desktop link-notes
 %define nwjs_version 0.36.2
 
 # VERSION
@@ -361,6 +361,10 @@ umask 007
 
 
 %changelog
+* Mon Aug 05 2019 Todd Warner <t0dd_at_protonmail.com> 0.7.2.6-0.1.20190512.taw
+  - 0.7.2.6
+  - Note, I _think_ this is identical to the last release.
+
 * Fri Apr 19 2019 Todd Warner <t0dd_at_protonmail.com> 0.7.2.6-0.1.20190419.taw
   - 0.7.2.6
   - upstream tossing in things like "pre-sync-fix" into the versionname (but  
