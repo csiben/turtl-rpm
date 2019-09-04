@@ -1,5 +1,17 @@
 # Turtl: The Secure Collaborative Notebook - for Fedora Linux
 
+> WARNING!!!  
+> The Turtl project seems to be languishing. I don't know for how much longer
+> I will continue to build RPMs for it. [Joplin](https://joplinapp.org/)
+> is a much MUCH healthier project with overlapping goals (though I do love
+> Turl's interface for Just Notes). I build RPMs for Joplin as well, those can
+> be found [here](https://github.com/taw00/joplin-rpm).
+> 
+> Anyway, I am tearing down my Turl server and will probably just stop
+> building these. The project's github sees almost zero activity of late.
+> If anyone wants to take this over, let me know and we can coordinate
+> something.
+
 Turtl is a nifty desktop and mobile application for writing and organizing
 [markdown](https://en.wikipedia.org/wiki/Markdown)-formatted documents and then
 storing, fully encrypted, on the local filesystem as well as synced to the
